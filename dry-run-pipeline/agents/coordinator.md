@@ -14,11 +14,120 @@
 
 1. `/Users/yunpengjiang/Desktop/AB project/ai bookkeeper 8 nodes/coordinator_agent_spec_v3.md`
 
-读取后，用 spec 定义的逻辑对每笔 PENDING 交易走查处理流程。
+读取后，结合下方的功能逻辑要点进行分析。
 
 ---
 
-## 第二步：执行测试
+## 第二步：功能逻辑要点（必须逐项验证）
+
+### 2.1 Coordinator 的核心职责
+
+Coordinator Agent 是置信度分类器和 accountant 之间的桥梁。它不做最终分类决定，但辅助 accountant 完成分类。
+
+- [ ] 触发条件：置信度分类器处理完所有交易后，存在 PENDING 交易时自动触发
+- [ ] 无 PENDING 交易 → 不启动，直接进入输出报告阶段
+- [ ] Coordinator 是 Agent（需要 LLM 语义理解），不是代码 Pipeline
+
+**测试重点：** 当所有交易都被 Node 1/2/3 消化（0 笔 PENDING）时，Coordinator 是否被正确跳过？
+
+### 2.2 PENDING 交易接收与分组（Spec §5 Step 1）
+
+- [ ] 调用 collect_pending.py 收集所有 PENDING 交易
+- [ ] 按 description 的标准化 pattern 归组
+- [ ] 组内按金额排序
+- [ ] "带选项"和"不带选项"的 PENDING 分开排列
+
+**测试重点：** 同一 pattern 不同金额的多笔交易是否正确归组？带选项和不带选项的分组逻辑是否与 Node 3 输出中的 options 字段对应？
+
+### 2.3 沟通消息生成（Spec §5 Step 2）
+
+**带选项的 PENDING：**
+- [ ] 同 pattern 归组展示，列出每笔的日期、金额、direction
+- [ ] 展示系统参考（observation_context）
+- [ ] 展示系统建议选项（来自 classifier_output.options）
+- [ ] 允许 accountant 统一回复或逐笔说明
+
+**不带选项的 PENDING：**
+- [ ] 展示交易明细
+- [ ] 展示 AI 分析（description_analysis）和建议提问（suggested_questions）
+- [ ] 请 accountant 提供信息
+
+**cheque_info 交易：**
+- [ ] 展示支票信息（收款人、备注、支票号）
+- [ ] cheque_info 作为分类的关键线索呈现
+
+**测试重点：** 消息格式是否对 accountant 友好？同组内交易数量很多时（如 10+ 笔同 pattern）展示方式是否合理？
+
+### 2.4 Accountant 回复解析（Spec §5 Step 3-4）
+
+**9 种回复类型及对应处理：**
+
+- [ ] 直接选择选项 → 情况 A（明确分类指令）
+- [ ] 提供明确科目 → 情况 A
+- [ ] 提供业务信息但未指定科目 → 情况 B（模糊信息 → 生成选项）
+- [ ] 部分回复 → 处理已回复部分，其余继续等待
+- [ ] 附带 profile 变更信息 → 调用 update_profile.py + 处理分类回复
+- [ ] 引用上下文 → 查阅上下文理解，无法确定则追问
+- [ ] 模糊回复 → 追问确认
+- [ ] 要求拆分 → 调用 split_transaction.py
+- [ ] 提供信息但未直接分类 → 情况 B
+
+**测试重点：** 每种回复类型的处理路径是否完整？是否有遗漏的回复类型？
+
+### 2.5 情况 A：明确分类指令后的操作链（Spec §5 Step 4）
+
+- [ ] 验证科目存在于 COA.csv → 存在 → 继续 / 不存在 → 提示重新指定
+- [ ] 调用 build_je_lines.py 构造 → validate_je 校验
+- [ ] 调用 write_observation.py 写入分类结果（confirmed_by: accountant）
+- [ ] 调用 write_transaction_log.py 写入 Transaction Log（classified_by: accountant_confirmed）
+- [ ] 交易完成分类，进入输出报告
+
+**测试重点：** 操作链中每步的输入来源和输出去向是否明确？write_observation 和 write_transaction_log 的调用顺序是否有依赖？
+
+### 2.6 情况 B：模糊信息后的操作链（Spec §5 Step 4）
+
+- [ ] Agent 结合 COA.csv + tax_reference.md 生成 2-3 个选项
+- [ ] 请 accountant 选择 → 走情况 A
+
+**测试重点：** 生成选项时 agent 依据什么信息源？选项格式是否与 Node 3 输出的 options 格式一致？
+
+### 2.7 拆分交易流程（Spec §5 Step 4 + §6）
+
+- [ ] 调用 split_transaction.py：金额之和必须等于原始金额
+- [ ] 子交易三种后续路径：
+  - accountant 已给每条明确分类 → 每条走情况 A
+  - accountant 只给金额拆分和模糊描述 → 每条走情况 B
+  - accountant 只给金额拆分未说明用途 → 每条 retrigger_workflow.py 从 Node 1 重新走
+
+**测试重点：** 拆分后原始交易的状态如何处理？子交易重走 workflow 时是否携带 supplementary_context？
+
+### 2.8 Profile 变更信号捕获（Spec §5 Step 4）
+
+- [ ] Agent 在解析任何回复时始终检查是否包含 profile 变更信号
+- [ ] 可能触发的场景：银行账户变更、员工状态、贷款变更、HST 注册状态等
+- [ ] 调用 update_profile.py → 如变更影响当前 PENDING 交易 → retrigger_workflow.py
+- [ ] Agent 不主动询问这些信息
+
+**测试重点：** profile 变更信号的检测是否依赖 LLM 语义理解？如果 accountant 的回复中隐含变更信号但不明确，agent 是否追问确认？
+
+### 2.9 全部 PENDING 解决确认（Spec §5 Step 5）
+
+- [ ] 检查所有 PENDING 是否都已处理
+- [ ] 未处理的 → 继续等待或提醒 accountant
+- [ ] 全部完成 → 主 Workflow 继续 → 生成输出报告
+
+**测试重点：** 如果 accountant 长期不回复某些交易，系统的行为是什么？是否有超时机制？
+
+### 2.10 权限边界（Spec §7）
+
+- [ ] 允许：读 Profile/COA/tax_reference、更新 profile、注入 supplementary_context、拆分交易、触发 workflow 重处理、构造 JE、写 observation（confirmed_by: accountant）、写 Transaction Log
+- [ ] 不允许：自行做最终分类决定、修改 rules.md、修改 observation 状态标记（non_promotable/force_review）
+
+**测试重点：** Coordinator 的权限边界与审核 Agent 是否有重叠或冲突？两者的职责分界是否清晰？
+
+---
+
+## 第三步：执行测试
 
 **输入：来自 Node 3 的 PENDING 交易列表**
 
@@ -37,49 +146,21 @@
 5. 回复中包含 profile 变更信号（如"这个客户上个月开始雇人了"）
 6. 要求拆分某笔交易（指定金额拆分）
 
-对每个模拟场景，走查 §5 执行流程，记录每步的操作和调用的 script。
-
----
-
-## 第三步：重点测试以下 spec 疑点
-
-以下问题在 spec 中描述不够明确，请在测试时特别留意：
-
-**异步等待与状态管理**
-- Coordinator 是异步的——发出消息后等待 accountant 回复，可能数小时或数天
-- spec 未描述"等待状态"如何存储：如果 Claude 进程退出，会话状态如何恢复？
-- "Accountant 可以分多次回复，Agent 维护已处理/未处理状态"——这个状态存在哪里？
-
-**拆分交易后的原始交易状态**
-- split_transaction.py 拆分后，子交易调用 retrigger_workflow.py 从 Node 1 重新走
-- 原始交易在 Transaction Log 中如何处理？是删除、标记为 superseded，还是保留？spec §6 未说明
-
-**inject_context.py 的使用范围**
-- §6 说 inject_context.py "仅在拆分交易后子交易需要重新走 workflow 时使用"
-- 但 §4 执行流程提到：accountant 给出业务信息后，agent 有时会注入 supplementary_context 再让交易重走 workflow
-- 这两个场景是否都应该用 inject_context.py？spec 未明确
-
-**非结构化 PENDING 的处理深度**
-- "不带选项"的 PENDING（如 `EMT E-TFR $2,500.00`）：spec 只说"发送给 accountant 询问"
-- 但 accountant 的回复可能再次触发情况 A 或 B（需要生成 JE）
-- "不带选项"的完整处理链是否与"带选项"最终汇归到同一个 Step 4？
-
-**已 confirmed_by accountant 的分类是否写 observation**
-- §5.4 情况 A：Coordinator 阶段 accountant 确认后调用 write_observation.py（confirmed_by: accountant）
-- 但如果某笔交易 accountant 明确说"这只是这次的例外，以后不要这样分"——Coordinator 是否应该跳过 write_observation？
-- spec 只在审核 Agent 中明确了"例外不污染 observation"，Coordinator 阶段是否也有这个逻辑？
-
-**COA 验证失败时的处理**
-- 情况 A：accountant 指定了不在 COA 中的科目 → 提示并请 accountant 重新指定
-- 但 accountant 可能坚持用这个科目名（认为是 COA 要更新的问题）
-- spec 未描述这个 escalation 路径
+对每个模拟场景，走查执行流程，记录每步的操作和调用的 script。
 
 ---
 
 ## 第四步：输出结果
 
+请严格按照以下格式输出：
+
 ```
 ## Coordinator Agent — 分析结果
+
+### 0. 处理统计
+- 接收: N 笔 PENDING 交易
+- 本节点处理: M 笔（已完成分类）
+- 传递给下一节点: K 笔（含拆分后重走 workflow 的子交易）
 
 ### 1. 处理结果
 [每个模拟场景的处理流程和操作记录，含调用的 script]
