@@ -80,6 +80,7 @@ Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，
 - [supporting documents/communication_preferences.md](supporting%20documents/communication_preferences.md)
 - [supporting documents/deferred_items.md](supporting%20documents/deferred_items.md) — 所有 deferred 统一在此，禁止散落各 spec
 - [supporting documents/spec_format.md](supporting%20documents/spec_format.md)
+- [supporting documents/development_workflow.md](supporting%20documents/development_workflow.md) — 开发流程框架（Phase 0-5 + 跨会话一致性规则）
 
 ## Current Focus
 

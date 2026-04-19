@@ -98,6 +98,8 @@ def pre_clean(raw_description):
 5. 泛型描述原样返回：`DEPOSIT` → `DEPOSIT`
 6. 政府机构保留用途区分：`CRA FED TAX` → `CRA FEDERAL TAX`
 
+**写回字典：** LLM 返回 canonical pattern 后，以 `cleaned_fragment` 为 key、LLM 输出为 `canonical_pattern` 写入 Pattern Dictionary，`source` 标记为 `llm_extraction`。后续同一 `cleaned_fragment` 再次出现时，Layer 2 直接命中，不再调用 LLM。
+
 ---
 
 ## 4. Pattern Dictionary（内部存储）
