@@ -1,0 +1,19 @@
+{
+  "scope": "full_pipeline",
+  "goal": "Phase 0 dry run to find spec bugs, interface problems, and ambiguities using real bank statements.",
+  "orchestrator_policy": "Use isolated node subagents and structured handoffs; do not let one node absorb full-pipeline reasoning.",
+  "known_step0_limitations": [
+    "PDF extraction produced 57 structured_candidates from 13 statements.",
+    "A small number of rows contain date-token normalization noise from the PDF layer.",
+    "Several transactions have both debit and credit columns populated in the text extraction and should be treated as extraction-risk evidence, not guaranteed truth."
+  ],
+  "user_inputs_provided": {
+    "bank_statements": 13,
+    "receipts": 0,
+    "cheque_images": 0,
+    "structured_profile": false,
+    "rules": false,
+    "observations": false,
+    "coa": false
+  }
+}

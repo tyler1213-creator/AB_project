@@ -1,0 +1,59 @@
+{
+  "client_name": "15761051 CANADA INC.",
+  "province": "Ontario",
+  "hst_registered": true,
+  "hst_rate": "13%",
+  "business_type": "Corporation",
+  "bank_accounts": [
+    {
+      "id": "RBC-4538",
+      "account_number": "04030 102-453-8",
+      "type": "chequing",
+      "institution": "Royal Bank of Canada",
+      "coa_account": null,
+      "coa_number": null
+    },
+    {
+      "id": "RBC-6244",
+      "account_number": "04030 102-624-4",
+      "type": "savings",
+      "institution": "Royal Bank of Canada",
+      "coa_account": null,
+      "coa_number": null
+    }
+  ],
+  "profile_data": {
+    "bank_accounts": [
+      {
+        "id": "RBC-4538",
+        "account_number": "04030 102-453-8",
+        "type": "chequing",
+        "coa_account": null,
+        "coa_number": null
+      },
+      {
+        "id": "RBC-6244",
+        "account_number": "04030 102-624-4",
+        "type": "savings",
+        "coa_account": null,
+        "coa_number": null
+      }
+    ],
+    "account_relationships": [],
+    "loans": [],
+    "industry": null,
+    "owner_uses_company_account": null,
+    "has_employees": null,
+    "has_hst_registration": true,
+    "province": "Ontario"
+  },
+  "rules_data": [],
+  "observations_data": [],
+  "coa_data": null,
+  "defaults_applied": [
+    "No explicit profile.md was provided; using inferred bank account list plus empty account_relationships.",
+    "No rules data was provided; using empty rules_data.",
+    "No observations data was provided; using empty observations_data.",
+    "No COA data was provided; marking coa_data as null."
+  ]
+}
