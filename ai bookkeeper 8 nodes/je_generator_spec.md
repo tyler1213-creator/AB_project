@@ -69,7 +69,7 @@ Step 7: 组装 je_lines 数组
 
 ```yaml
 je_input:
-  transaction_id: "txn_2024071802"
+  transaction_id: "txn_01JVF8Y7T6M3K2N9Q4R5S8W1XZ"
   hst_type: "inclusive_13"
   je_lines:
     - { type: "debit", account: "Supplies & Materials", amount: 138.74 }
@@ -100,7 +100,7 @@ build_je_lines.py 或调用方传入以下数据：
 
 ```yaml
 je_input:
-  transaction_id: "txn_2024071802"       # 交易唯一标识
+  transaction_id: "txn_01JVF8Y7T6M3K2N9Q4R5S8W1XZ"       # 上游分配的永久交易标识
   hst_type: "inclusive_13"                # exempt | inclusive_13 | unknown | internal_transfer
   je_lines:
     - { type: "debit", account: "Supplies & Materials", amount: 138.71 }
