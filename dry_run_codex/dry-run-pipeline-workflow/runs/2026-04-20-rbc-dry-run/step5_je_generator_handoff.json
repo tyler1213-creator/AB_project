@@ -1,0 +1,44 @@
+{
+  "handoff_payload": {
+    "node_id": "je_generator",
+    "status": "completed_with_issues",
+    "summary": {
+      "processed_count": 0,
+      "classified_count": 0,
+      "forwarded_count": 0,
+      "pending_count": 0
+    },
+    "outputs": {
+      "next_node_transactions": [],
+      "classified_transactions": [],
+      "pending_transactions": [],
+      "transaction_log_candidates": [],
+      "artifacts": {}
+    },
+    "issues": {
+      "bugs": [],
+      "interface_issues": [
+        {
+          "id": "JE-IF-001",
+          "description": "Node 3 produced no high-confidence classifications, so JE Generator received an empty classified pool.",
+          "upstream_provided": "classified_transactions: []",
+          "expected": "At least some classified transactions if JE generation is to be exercised on real data.",
+          "impact": "This run only exercises the empty-input path for JE generation."
+        }
+      ],
+      "spec_ambiguities": [
+        {
+          "id": "JE-SA-001",
+          "description": "The spec does not explicitly describe what the dry-run orchestrator should report when JE Generator receives no eligible transactions because all work was routed to pending.",
+          "spec_text": "输入：所有已分类交易（来自 Node 1/2/3 的高置信度分类结果）",
+          "interpretation_a": "JE Generator returns a clean empty result.",
+          "interpretation_b": "JE Generator should surface a workflow-level warning because downstream report generation loses direct transaction-log inputs.",
+          "recommendation": "Define the expected empty-input behavior in the JE generator dry-run contract."
+        }
+      ]
+    },
+    "notes": [
+      "No real classified transactions were available, so JE generation was not exercised on transaction data in this run."
+    ]
+  }
+}

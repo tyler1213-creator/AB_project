@@ -35,9 +35,37 @@ Data Preprocessing Step 3（cheque image processing）在 Step 5（description s
 
 ---
 
+### BUG-002: Node 1 Profile 匹配目标字段与标准化后的 description 不兼容
+
+**严重程度：** 高
+
+**问题描述：**
+
+Profile 中 `account_relationships.pattern`（如 `TFR-TO 6337546`）是基于银行原始流水字符串定义的。但 Data Preprocessing Agent 的 Step 5 将 description 标准化为 canonical pattern（如 `INTERNAL TRANSFER TD`），下游节点消费的是标准化后的 `description` 字段。
+
+Node 1 需要用 `account_relationships.pattern` 做匹配，但如果匹配目标是已经标准化的 `description`，两者格式完全不同，匹配必然失败。
+
+**影响：**
+
+1. Node 1 的内部转账识别逻辑无法正常工作
+2. 所有内部转账会穿透到 Node 2/3，被当作普通交易处理
+3. 无法正确生成 internal_transfer 类型的 JE（需要两个银行账户互借互贷）
+
+**涉及 spec：**
+
+- `ai bookkeeper 8 nodes/profile_spec.md` — account_relationships.pattern 定义
+- `ai bookkeeper 8 nodes/data_preprocessing_agent_spec_v3.md` — Step 5 description standardization 在 pipeline 中的位置
+- `tools/pattern_standardization_spec.md` — standardize_description 的输出字段
+
+**待决策：**
+
+需要确定 Node 1 的匹配目标：用 `raw_description` 匹配（保持 pattern 为银行原始格式），还是重新定义 `account_relationships.pattern` 为 canonical pattern 格式。前者更自然（银行转账描述格式固定），但需要 Data Preprocessing 将 `raw_description` 传递给 Node 1。
+
+---
+
 ## Node 1 — Profile Match
 
-（暂无 bug）
+（暂无 bug，BUG-002 归因于 Data Preprocessing Agent 的字段传递设计）
 
 ---
 

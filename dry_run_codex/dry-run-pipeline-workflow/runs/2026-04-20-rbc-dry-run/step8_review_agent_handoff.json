@@ -1,0 +1,68 @@
+{
+  "handoff_payload": {
+    "node_id": "review_agent",
+    "status": "completed_with_issues",
+    "summary": {
+      "processed_count": 4,
+      "classified_count": 0,
+      "forwarded_count": 0,
+      "pending_count": 0
+    },
+    "outputs": {
+      "next_node_transactions": [],
+      "classified_transactions": [],
+      "pending_transactions": [],
+      "transaction_log_candidates": [],
+      "artifacts": {
+        "review_summary": {
+          "scenarios_reviewed": [
+            "Section C correction for bank fee remains straightforward but still depends on COA presence.",
+            "Internal transfer row suggests profile maintenance should happen earlier than review if accountant already confirmed the relationship in Coordinator.",
+            "Split Costco row highlights unresolved original-row superseded semantics.",
+            "No real Section A or Section B rows were available, so rule-error and AI-history-correction paths remain only partially exercised."
+          ],
+          "recommended_followups": [
+            "Provide real profile/rules/observations/COA inputs and rerun to exercise Sections A and B.",
+            "Make transaction identifiers globally unique before any stateful coordinator or review workflow.",
+            "Document how intervention logging timestamps should differ from transaction dates."
+          ]
+        },
+        "review_input_report_excerpt": "# Draft Output Report\n\n## Section A — Deterministic\nNo transactions in this run.\n\n## Section B — AI High Confidence\nNo transactions in this run.\n\n## Section C — Accountant Confirmed / Coordinator Resolved\n| Date | Description | Amount | Pre-tax | HST | Account | Classified By | Notes |\n| --- | --- | ---: | ---: | --- | --- | --- | --- |\n| 2024-04-01 | MONTHLYFEE | -6.00 | 6.00 | 0.00 | Bank Charges and Fees | accountant_confirmed | Accountant selected the suggested bank-fee treatment for recurring RBC monthly fees. |\n| 2024-07-08 | INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT A] | -371.63 | 371.63 |  | Supplies and Materials | accountant_confirmed | Accountant requested splitting the Costco purchase into business supplies portion. |\n| 2024-07-08 | INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT B] | -371.63 | 371.63 | 0.00 | Shareholder Loan | accountant_confirmed | Accountant requested splitting the remaining Costco purchase to shareholder-use portion. |\n| 2024-12-22 | ONLINEBANKINGTRANSFER-7238 ONLINETRANSFERTODEPOSITACCOUNT-4968 | -500.00 | 500.00 | 0.00 | Internal Transfer | accountant_confirmed | Accountant confirmed this transfer connects chequing 4538 and savings 6244 and implied profile.account_relationships should be updated. |\n| 2025-01-02 | DEPOSITINTEREST | 9.86 | 9.86 | 0.00 | Interest Income | accountant_confirmed | Accountant directly identified savings-account interest income. |\n\nSection C count: 5\nSection C signed total: -1239.40"
+      }
+    },
+    "issues": {
+      "bugs": [],
+      "interface_issues": [
+        {
+          "id": "RA-IF-001",
+          "description": "Because the run populated only Section C mock rows, the review agent could not truly exercise rule-error or AI-high-confidence correction paths.",
+          "upstream_provided": "Report draft with empty Section A/B and populated Section C only.",
+          "expected": "A mixed report covering deterministic, AI, and accountant-confirmed sections.",
+          "impact": "Review flow coverage is incomplete for the highest-value historical-correction paths."
+        }
+      ],
+      "spec_ambiguities": [
+        {
+          "id": "RA-SA-001",
+          "description": "Coordinator can surface a profile change signal and effectively resolve a transfer, while Review Agent is described as advisory-only on profile changes; this division remains awkward.",
+          "spec_text": "Review Agent 不修改 profile.md ... Coordinator 会直接更新 profile 并触发 retrigger",
+          "interpretation_a": "Coordinator owns operational profile changes; Review only flags them retrospectively.",
+          "interpretation_b": "Both agents should follow the same profile-change policy for user consistency.",
+          "recommendation": "Unify or explicitly differentiate the profile-change contract between Coordinator and Review Agent."
+        },
+        {
+          "id": "RA-SA-002",
+          "description": "The spec still underdefines how split-transaction interventions should reference and preserve the original source transaction in intervention logs and rebuilt reports.",
+          "spec_text": "split / rebuild 相关流程依赖 Transaction Log 为 source of truth",
+          "interpretation_a": "Original row remains as superseded metadata.",
+          "interpretation_b": "Original row disappears from active reporting once children exist.",
+          "recommendation": "Define the canonical review/reporting visibility of superseded parent rows."
+        }
+      ]
+    },
+    "notes": [
+      "This review step exercised workflow critique more than accounting correction because upstream automation never populated Sections A or B.",
+      "The report draft was still sufficient to surface workflow-level gaps around profile maintenance, split handling, and intervention logging."
+    ]
+  }
+}

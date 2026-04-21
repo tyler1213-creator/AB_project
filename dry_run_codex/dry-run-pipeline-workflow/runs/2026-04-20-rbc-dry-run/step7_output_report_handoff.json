@@ -1,0 +1,54 @@
+{
+  "handoff_payload": {
+    "node_id": "output_report",
+    "status": "completed_with_issues",
+    "summary": {
+      "processed_count": 5,
+      "classified_count": 5,
+      "forwarded_count": 0,
+      "pending_count": 0
+    },
+    "outputs": {
+      "next_node_transactions": [],
+      "classified_transactions": [],
+      "pending_transactions": [],
+      "transaction_log_candidates": [],
+      "artifacts": {
+        "report_draft": "# Draft Output Report\n\n## Section A — Deterministic\nNo transactions in this run.\n\n## Section B — AI High Confidence\nNo transactions in this run.\n\n## Section C — Accountant Confirmed / Coordinator Resolved\n| Date | Description | Amount | Pre-tax | HST | Account | Classified By | Notes |\n| --- | --- | ---: | ---: | --- | --- | --- | --- |\n| 2024-04-01 | MONTHLYFEE | -6.00 | 6.00 | 0.00 | Bank Charges and Fees | accountant_confirmed | Accountant selected the suggested bank-fee treatment for recurring RBC monthly fees. |\n| 2024-07-08 | INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT A] | -371.63 | 371.63 |  | Supplies and Materials | accountant_confirmed | Accountant requested splitting the Costco purchase into business supplies portion. |\n| 2024-07-08 | INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT B] | -371.63 | 371.63 | 0.00 | Shareholder Loan | accountant_confirmed | Accountant requested splitting the remaining Costco purchase to shareholder-use portion. |\n| 2024-12-22 | ONLINEBANKINGTRANSFER-7238 ONLINETRANSFERTODEPOSITACCOUNT-4968 | -500.00 | 500.00 | 0.00 | Internal Transfer | accountant_confirmed | Accountant confirmed this transfer connects chequing 4538 and savings 6244 and implied profile.account_relationships should be updated. |\n| 2025-01-02 | DEPOSITINTEREST | 9.86 | 9.86 | 0.00 | Interest Income | accountant_confirmed | Accountant directly identified savings-account interest income. |\n\nSection C count: 5\nSection C signed total: -1239.40"
+      }
+    },
+    "issues": {
+      "bugs": [],
+      "interface_issues": [
+        {
+          "id": "OR-IF-001",
+          "description": "This report is built only from coordinator-generated mock transaction-log candidates because JE Generator produced no real log rows.",
+          "upstream_provided": "5 accountant-confirmed mock candidates, 0 deterministic or AI-high-confidence rows.",
+          "expected": "A fuller transaction log spanning Sections A/B/C.",
+          "impact": "Section A and Section B are empty, so some report-format paths remain unexercised."
+        },
+        {
+          "id": "OR-IF-002",
+          "description": "Unknown-HST split rows and mock JE lines were included without COA validation.",
+          "upstream_provided": "Mock JE lines from coordinator scenarios with no COA backing.",
+          "expected": "Validated transaction-log rows with reliable JE metadata.",
+          "impact": "The draft report is suitable for workflow testing, not financial reliance."
+        }
+      ],
+      "spec_ambiguities": [
+        {
+          "id": "OR-SA-001",
+          "description": "The spec does not make clear whether a dry-run report should still render empty sections when all real transactions are unresolved and only scenario-based coordinator outputs exist.",
+          "spec_text": "按 classified_by 分配到 Section A / B / C",
+          "interpretation_a": "Render empty sections explicitly for traceability.",
+          "interpretation_b": "Suppress empty sections and show only populated ones.",
+          "recommendation": "Define whether empty sections are mandatory in dry-run output."
+        }
+      ]
+    },
+    "notes": [
+      "Report draft intentionally keeps empty Section A and B visible to show routing outcomes for this run.",
+      "All populated rows come from simulated coordinator resolutions, not from deterministic or AI-high-confidence automation."
+    ]
+  }
+}

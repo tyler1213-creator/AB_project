@@ -1,0 +1,2030 @@
+{
+  "handoff_payload": {
+    "node_id": "coordinator",
+    "status": "completed_with_issues",
+    "summary": {
+      "processed_count": 70,
+      "classified_count": 5,
+      "forwarded_count": 0,
+      "pending_count": 66
+    },
+    "outputs": {
+      "next_node_transactions": [],
+      "classified_transactions": [],
+      "pending_transactions": [
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-04-02",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010 ITEMRETURNEDNSF",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010 ItemreturnedNSF",
+            "amount": 25.0,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": -6.0,
+            "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-04-11",
+            "description": "ACCOUNTPAYABLEPMT ALPHAPAY",
+            "raw_description": "AccountPayablePmt AlphaPay",
+            "amount": 559.35,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 553.35,
+            "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-04-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010 OVERDRAFTINTEREST @RBP+05.00%P.A",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010 Overdraftinterest @RBP+05.00%P.A",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 502.48,
+            "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-04-24",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 1017.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2024-04-22",
+            "description": "NSFITEMFEE",
+            "raw_description": "NSFitemfee",
+            "amount": 45.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 1474.48,
+            "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-05-01",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010 MONTHLYFEE",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010 Monthlyfee",
+            "amount": 15.77,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 1452.71,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-05-02",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 2599.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 4051.71,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-05-15",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 1582.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 5633.71,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-05-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 5582.86,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-05-21",
+            "description": "E-TRANSFER-AUTODEPOSIT SU-CHUANGKUO FC233824BF154E57AD614311F9C027A1 E-TRANSFER-AUTODEPOSIT VICKIYI-LINGKUO CEAE8014477E4554A319538089B0DD1B",
+            "raw_description": "e-Transfer-Autodeposit SU-CHUANGKUO FC233824BF154E57AD614311F9C027A1 e-Transfer-Autodeposit VICKIYI-LINGKUO CEAE8014477E4554A319538089B0DD1B",
+            "amount": 791.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2024-05-22",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 1562.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 8726.86,
+            "bs_source": "Chequing Statement-4538 2024-05-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-05-28",
+            "description": "E-TRANSFER-AUTODEPOSIT JUNYIZHONG 1B9ABB24A0B04E28A0452917E3BF4EB8 E-TRANSFER-AUTODEPOSIT XIAOJIAQI CF47B1A6329442D6A4F8CABECF83B5C9",
+            "raw_description": "e-Transfer-Autodeposit JUNYIZHONG 1B9ABB24A0B04E28A0452917E3BF4EB8 e-Transfer-Autodeposit XIAOJIAQI CF47B1A6329442D6A4F8CABECF83B5C9",
+            "amount": 1017.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 11325.86,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-05-29",
+            "description": "E-TRANSFER-AUTODEPOSIT XIAOYINGCHEN 2602D13E658F47679530C3CFE675D5DF",
+            "raw_description": "e-Transfer-Autodeposit XIAOYINGCHEN 2602d13e658f47679530c3cfe675d5df",
+            "amount": 1017.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 12342.86,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-05-30",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 0.02,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 12342.84,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-05-31",
+            "description": "E-TRANSFER-AUTODEPOSIT YUMENG C1A9C8X8U2T5",
+            "raw_description": "e-Transfer-Autodeposit YUMENG C1A9C8x8u2t5",
+            "amount": 1560.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 13902.84,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-06-03",
+            "description": "E-TRANSFER-AUTODEPOSIT JINSHENGPAN C1AAFHZ5H2NE MISCPAYMENT DP30108740010 30108740010 MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "e-Transfer-Autodeposit JINSHENGPAN C1AaFHZ5h2ne MiscPayment DP30108740010 30108740010 MiscPayment MRCH30108740010 30108740010",
+            "amount": 105.86,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": null,
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16934.98,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_007",
+            "date": "2024-06-13",
+            "description": "INTERACPURCHASE-9921B001 LULULEMONHILLC",
+            "raw_description": "Interacpurchase-9921B001 LULULEMONHILLC",
+            "amount": 349.74,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16585.24,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Retail-style card purchase without receipt should remain pending under the current profile context.",
+          "questions_or_options": {
+            "questions": [
+              "What was purchased and was it business-related?",
+              "Was any HST shown on a receipt?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_008",
+            "date": "2024-06-17",
+            "description": "MISCPAYMENT DP30108740010 30108740010 MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010 MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 18116.39,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_009",
+            "date": "2024-06-24",
+            "description": "E-TRANSFERSENT RENJING E-TRANSFERSENT SOUNDINSURANCE",
+            "raw_description": "e-Transfersent renjing e-Transfersent soundinsurance",
+            "amount": 442.96,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16568.59,
+            "bs_source": "Chequing Statement-4538 2024-06-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-07-02",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010 MONTHLYFEE",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010 Monthlyfee",
+            "amount": 59.23,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16503.36,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-07-03",
+            "description": "E-TRANSFER-AUTODEPOSIT BOSTRADINGGROUPLTD. C1AA7EVPG83F",
+            "raw_description": "e-Transfer-Autodeposit BOSTRADINGGROUPLTD. C1Aa7evpg83F",
+            "amount": 1500.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 18003.36,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-07-05",
+            "description": "E-TRANSFERSENT SELINA",
+            "raw_description": "e-Transfersent selina",
+            "amount": 1500.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16503.36,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-07-10",
+            "description": "CONTACTLESSINTERACPURCHASE-3016B001 DOLLARAMA#584",
+            "raw_description": "ContactlessInteracpurchase-3016B001 DOLLARAMA#584",
+            "amount": 27.69,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16104.04,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Retail-style card purchase without receipt should remain pending under the current profile context.",
+          "questions_or_options": {
+            "questions": [
+              "What was purchased and was it business-related?",
+              "Was any HST shown on a receipt?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2024-07-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_007",
+            "date": "2024-07-22",
+            "description": "E-TRANSFER-AUTODEPOSIT QUNWANG C1ABH7SURERV",
+            "raw_description": "e-Transfer-Autodeposit QUNWANG C1ABH7SUrerv",
+            "amount": 155.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16208.19,
+            "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-08-01",
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16202.19,
+            "bs_source": "Chequing Statement-4538 2024-08-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-08-19",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16151.34,
+            "bs_source": "Chequing Statement-4538 2024-08-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-09-03",
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16145.34,
+            "bs_source": "Chequing Statement-4538 2024-09-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-09-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16094.49,
+            "bs_source": "Chequing Statement-4538 2024-09-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-10-01",
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 16088.49,
+            "bs_source": "Chequing Statement-4538 2024-10-25 (1) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-10-15",
+            "description": "E-TRANSFERSENT EVERFASTEXPRESS E-TRANSFERSENT EVERFASTEXPRESS",
+            "raw_description": "e-Transfersent EverfastExpress e-Transfersent EverfastExpress",
+            "amount": 2000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 12088.49,
+            "bs_source": "Chequing Statement-4538 2024-10-25 (1) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-10-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 12037.64,
+            "bs_source": "Chequing Statement-4538 2024-10-25 (1) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-10-25",
+            "description": "E-TRANSFER-AUTODEPOSIT YUANYUAN C1AYSQZP4X3E",
+            "raw_description": "e-Transfer-Autodeposit YUANYUAN C1AYsQzP4X3E",
+            "amount": 2599.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 14636.64,
+            "bs_source": "Chequing Statement-4538 2024-10-25 (1) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-10-28",
+            "description": "E-TRANSFER-AUTODEPOSIT XIAOYIGAN C1AVUNW7YQQC",
+            "raw_description": "e-Transfer-Autodeposit XIAOYIGAN C1AvuNw7yQqC",
+            "amount": 34.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 14670.64,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-10-31",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 1189.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 15859.64,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-11-01",
+            "description": "E-TRANSFER-AUTODEPOSIT HATTYQDESIGNINC. CAA8Y9Q5 MISCPAYMENT MRCH30108740010 30108740010 MONTHLYFEE",
+            "raw_description": "e-Transfer-Autodeposit HATTYQDESIGNINC. CAa8Y9Q5 MiscPayment MRCH30108740010 30108740010 Monthlyfee",
+            "amount": 24.02,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 17016.62,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-11-06",
+            "description": "E-TRANSFERSENT EVERFASTEXPRESS",
+            "raw_description": "e-Transfersent EverfastExpress",
+            "amount": 1275.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 15741.62,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-11-07",
+            "description": "E-TRANSFER-AUTODEPOSIT YANGZHANG C1ADD43WDREF E-TRANSFER-AUTODEPOSIT YIWANG C1A3MK2X26G6",
+            "raw_description": "e-Transfer-Autodeposit YANGZHANG C1Add43wDREF e-Transfer-Autodeposit YIWANG C1A3Mk2x26G6",
+            "amount": 509.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 17945.62,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2024-11-08",
+            "description": "E-TRANSFERSENT EVERFASTEXPRESS",
+            "raw_description": "e-Transfersent EverfastExpress",
+            "amount": 1712.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_007",
+            "date": "2024-11-11",
+            "description": "E-TRANSFERSENT RENJING2 E-TRANSFER-AUTODEPOSIT XIAOYIGAN C1AMFNFTNHFJ E-TRANSFER-AUTODEPOSIT LINGZIBAI C1AYUVAEHBUV E-TRANSFER-AUTODEPOSIT MERITIWEALTHINC. 10AF724CD8B6486880256E1027B1A509 INTERACPURCHASE-1262B002 COSTCOWHOLESAL",
+            "raw_description": "e-Transfersent renjing2 e-Transfer-Autodeposit XIAOYIGAN C1AmfNfTNHfJ e-Transfer-Autodeposit LINGZIBAI C1AYUvaEHbuV e-Transfer-Autodeposit MERITIWEALTHINC. 10af724cd8b6486880256e1027b1a509 Interacpurchase-1262B002 COSTCOWHOLESAL",
+            "amount": 755.0,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 22442.83,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_008",
+            "date": "2024-11-18",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 22391.98,
+            "bs_source": "Chequing Statement-4538 2024-11-27 (3) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2024-12-02",
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 22385.98,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2024-12-12",
+            "description": "E-TRANSFERSENT NMEXPRESS ONLINEBANKINGTRANSFER-0559",
+            "raw_description": "e-Transfersent NMExpress OnlineBankingtransfer-0559",
+            "amount": 2000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 19885.98,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2024-12-13",
+            "description": "E-TRANSFER-AUTODEPOSIT YIWANG C1AQUYKR6CQZ",
+            "raw_description": "e-Transfer-Autodeposit YIWANG C1AqUYKr6cQz",
+            "amount": 2814.2,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 22700.18,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2024-12-16",
+            "description": "E-TRANSFER-AUTODEPOSIT YIWANG C1AD9DJBKXQX E-TRANSFER-AUTODEPOSIT YININGZHUANG C1ABZTUJP6FF E-TRANSFER-AUTODEPOSIT XINYUCHANG AB135EB41D8544409871DBF4944D9037 E-TRANSFER-AUTODEPOSIT SIYIHUANG 69E94D48104C4068AEB9A13FEC4AB659",
+            "raw_description": "e-Transfer-Autodeposit YIWANG C1AD9DjBkXQx e-Transfer-Autodeposit YININGZHUANG C1AbztUjP6ff e-Transfer-Autodeposit XINYUCHANG AB135EB41D8544409871DBF4944D9037 e-Transfer-Autodeposit SIYIHUANG 69E94D48104C4068AEB9A13FEC4AB659",
+            "amount": 67.8,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 23781.98,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2024-12-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 23731.13,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2024-12-18",
+            "description": "E-TRANSFER-AUTODEPOSIT FANGLIN C1A5SMCJQNF2",
+            "raw_description": "e-Transfer-Autodeposit FANGLIN C1A5sMcJqnF2",
+            "amount": 339.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2025-01-02",
+            "description": "MONTHLYFEE",
+            "raw_description": "Monthlyfee",
+            "amount": 6.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 3564.13,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Vendor identity is clear, but no COA inventory is available to validate the target account.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Bank Charges and Fees",
+                "hst": "exempt",
+                "reason": "Most likely treatment for RBC monthly service charges or NSF fees, pending COA validation."
+              }
+            ]
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2025-01-10",
+            "description": "E-TRANSFER-AUTODEPOSIT YININGZHUANG C1AKMA6UZPRD",
+            "raw_description": "e-Transfer-Autodeposit YININGZHUANG C1AkMa6UzpRD",
+            "amount": 10.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 3574.13,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2025-01-13",
+            "description": "E-TRANSFERSENT NMEXPRESS ONLINEBANKINGTRANSFER-2514 E-TRANSFER-AUTODEPOSIT SIUMANJANICELEE C1AKC58VBPJ3 E-TRANSFER-AUTODEPOSIT KIT-MANTING C1APJJPY52YF E-TRANSFER-AUTODEPOSIT TUNGYINGLO C1AZ98DHR8XT",
+            "raw_description": "e-Transfersent NMExpress OnlineBankingtransfer-2514 e-Transfer-Autodeposit SIUMANJANICELEE C1AKC58vbpJ3 e-Transfer-Autodeposit KIT-MANTING C1ApjJpy52Yf e-Transfer-Autodeposit TUNGYINGLO C1Az98DHR8xT",
+            "amount": 2000.0,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 22926.13,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2025-01-15",
+            "description": "ONLINETRANSFERTODEPOSITACCOUNT-7448",
+            "raw_description": "OnlineTransfertoDepositAccount-7448",
+            "amount": 20000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 2926.13,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2025-01-17",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2025-01-22",
+            "description": "E-TRANSFER-AUTODEPOSIT YININGZHUANG C1AVXSRZ92DX E-TRANSFER-AUTODEPOSIT HONGXIASHI C1ANJMKD7YSZ",
+            "raw_description": "e-Transfer-Autodeposit YININGZHUANG C1AvXSRZ92dX e-Transfer-Autodeposit HONGXIASHI C1ANJmKD7YSZ",
+            "amount": 34.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 4604.28,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_007",
+            "date": "2025-01-27",
+            "description": "E-TRANSFER-AUTODEPOSIT FANGLIN C1ABUN4ZTS6F CONTACTLESSINTERACPURCHASE-8517B002 CAFEBONBON",
+            "raw_description": "e-Transfer-Autodeposit FANGLIN C1AbUN4ztS6f ContactlessInteracpurchase-8517B002 CAFEBONBON",
+            "amount": 112.7,
+            "direction": "ambiguous",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 6186.58,
+            "bs_source": "Chequing Statement-4538 2025-01-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_001",
+            "date": "2025-02-03",
+            "description": "ONLINEBANKINGTRANSFER-9523 MONTHLYFEE",
+            "raw_description": "OnlineBankingtransfer-9523 Monthlyfee",
+            "amount": 1000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 5180.58,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_002",
+            "date": "2025-02-06",
+            "description": "E-TRANSFERSENT",
+            "raw_description": "e-Transfersent",
+            "amount": 1603.7,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 3576.88,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_003",
+            "date": "2025-02-07",
+            "description": "MISCPAYMENT DP30108740010 30108740010",
+            "raw_description": "MiscPayment DP30108740010 30108740010",
+            "amount": 1186.5,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 4763.38,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming deposit/payment appears recurring but lacks explicit revenue or liability context.",
+          "questions_or_options": {
+            "questions": [
+              "What business event generated this receipt?",
+              "Is this customer revenue, reimbursement, or a transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_004",
+            "date": "2025-02-11",
+            "description": "E-TRANSFER-AUTODEPOSIT SIYIHUANG AF16E453F464487990C066D3B41E9EE5",
+            "raw_description": "e-Transfer-Autodeposit SIYIHUANG AF16E453F464487990C066D3B41E9EE5",
+            "amount": 509.0,
+            "direction": "credit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 5272.38,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Incoming e-transfer source is visible but the economic nature of the receipt is unclear.",
+          "questions_or_options": {
+            "questions": [
+              "What did this incoming transfer relate to?",
+              "Is it sales income, reimbursement, loan, or owner funding?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_005",
+            "date": "2025-02-17",
+            "description": "ONLINEBANKINGTRANSFER-3878",
+            "raw_description": "OnlineBankingtransfer-3878",
+            "amount": 1000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 4272.38,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_006",
+            "date": "2025-02-18",
+            "description": "MISCPAYMENT MRCH30108740010 30108740010",
+            "raw_description": "MiscPayment MRCH30108740010 30108740010",
+            "amount": 50.85,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": null,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Repeated merchant code appears operationally important, but the merchant identity is not defined by upstream context.",
+          "questions_or_options": {
+            "questions": [
+              "What merchant or service corresponds to MRCH30108740010?",
+              "Is this a recurring business expense category?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-453-8_007",
+            "date": "2025-02-22",
+            "description": "E-TRANSFERSENT NMEXPRESS",
+            "raw_description": "e-Transfersent NMExpress",
+            "amount": 2000.0,
+            "direction": "debit",
+            "account": "04030 102-453-8",
+            "currency": "CAD",
+            "balance": 2221.53,
+            "bs_source": "Chequing Statement-4538 2025-02-27 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Outgoing e-transfer lacks enough business-purpose context to classify safely.",
+          "questions_or_options": {
+            "questions": [
+              "Who was paid and for what business purpose?",
+              "Should this be treated as expense, owner draw, or transfer?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-624-4_001",
+            "date": "2024-12-24",
+            "description": "ONLINEBANKINGTRANSFER-4968",
+            "raw_description": "OnlineBankingtransfer-4968",
+            "amount": 20000.0,
+            "direction": "credit",
+            "account": "04030 102-624-4",
+            "currency": "CAD",
+            "balance": 20000.0,
+            "bs_source": "Savings Statement-6244 2025-01-22 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-624-4_003",
+            "date": "2025-01-13",
+            "description": "ONLINETRANSFERTODEPOSITACCOUNT-2514",
+            "raw_description": "OnlineTransfertoDepositAccount-2514",
+            "amount": 20000.0,
+            "direction": "debit",
+            "account": "04030 102-624-4",
+            "currency": "CAD",
+            "balance": 9.86,
+            "bs_source": "Savings Statement-6244 2025-01-22 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-624-4_004",
+            "date": "2025-01-15",
+            "description": "ONLINEBANKINGTRANSFER-7448",
+            "raw_description": "OnlineBankingtransfer-7448",
+            "amount": 20000.0,
+            "direction": "credit",
+            "account": "04030 102-624-4",
+            "currency": "CAD",
+            "balance": 20009.86,
+            "bs_source": "Savings Statement-6244 2025-01-22 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "Transfer-like activity was not matched in Node 1 and may represent an unconfigured internal transfer.",
+          "questions_or_options": {
+            "questions": [
+              "Is this an internal transfer between company accounts?",
+              "If yes, which two bank accounts does it connect?"
+            ],
+            "options": []
+          }
+        },
+        {
+          "transaction": {
+            "transaction_id": "cand_04030102-624-4_001",
+            "date": "2025-02-03",
+            "description": "DEPOSITINTEREST",
+            "raw_description": "Depositinterest",
+            "amount": 35.18,
+            "direction": "credit",
+            "account": "04030 102-624-4",
+            "currency": "CAD",
+            "balance": 20045.04,
+            "bs_source": "Savings Statement-6244 2025-02-21 (1).pdf",
+            "receipt": null,
+            "cheque_info": null,
+            "supplementary_context": null
+          },
+          "pending_reason": "The transaction appears to be bank interest income, but COA validation is unavailable.",
+          "questions_or_options": {
+            "questions": [],
+            "options": [
+              {
+                "account": "Interest Income",
+                "hst": "exempt",
+                "reason": "Likely savings-account interest income if the COA contains this account."
+              }
+            ]
+          }
+        }
+      ],
+      "transaction_log_candidates": [
+        {
+          "transaction_id": "cand_04030102-453-8_001",
+          "date": "2024-04-01",
+          "description": "MONTHLYFEE",
+          "raw_description": "Monthlyfee",
+          "amount": 6.0,
+          "direction": "debit",
+          "account": "04030 102-453-8",
+          "currency": "CAD",
+          "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+          "classified_by": "accountant_confirmed",
+          "classification": {
+            "account": "Bank Charges and Fees",
+            "hst": "exempt",
+            "classified_by": "accountant_confirmed",
+            "reasoning": "Accountant selected the suggested bank-fee treatment for recurring RBC monthly fees."
+          },
+          "je_lines": [
+            {
+              "account": "Bank Charges and Fees",
+              "debit": 6.0,
+              "credit": 0.0
+            },
+            {
+              "account": "RBC Business Chequing",
+              "debit": 0.0,
+              "credit": 6.0
+            }
+          ],
+          "notes": "Accountant selected the suggested bank-fee treatment for recurring RBC monthly fees."
+        },
+        {
+          "transaction_id": "cand_04030102-624-4_002",
+          "date": "2025-01-02",
+          "description": "DEPOSITINTEREST",
+          "raw_description": "Depositinterest",
+          "amount": 9.86,
+          "direction": "credit",
+          "account": "04030 102-624-4",
+          "currency": "CAD",
+          "bs_source": "Savings Statement-6244 2025-01-22 (1).pdf",
+          "classified_by": "accountant_confirmed",
+          "classification": {
+            "account": "Interest Income",
+            "hst": "exempt",
+            "classified_by": "accountant_confirmed",
+            "reasoning": "Accountant directly identified savings-account interest income."
+          },
+          "je_lines": [
+            {
+              "account": "RBC Savings",
+              "debit": 0.0,
+              "credit": 0.0
+            },
+            {
+              "account": "Interest Income",
+              "debit": 0.0,
+              "credit": 9.86
+            }
+          ],
+          "notes": "Accountant directly identified savings-account interest income."
+        },
+        {
+          "transaction_id": "cand_04030102-453-8_007",
+          "date": "2024-12-22",
+          "description": "ONLINEBANKINGTRANSFER-7238 ONLINETRANSFERTODEPOSITACCOUNT-4968",
+          "raw_description": "OnlineBankingtransfer-7238 OnlineTransfertoDepositAccount-4968",
+          "amount": 500.0,
+          "direction": "debit",
+          "account": "04030 102-453-8",
+          "currency": "CAD",
+          "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+          "classified_by": "accountant_confirmed",
+          "classification": {
+            "account": "Internal Transfer",
+            "hst": "exempt",
+            "classified_by": "accountant_confirmed",
+            "reasoning": "Accountant confirmed this transfer connects chequing 4538 and savings 6244 and implied profile.account_relationships should be updated."
+          },
+          "je_lines": [
+            {
+              "account": "RBC Savings",
+              "debit": 500.0,
+              "credit": 0.0
+            },
+            {
+              "account": "RBC Business Chequing",
+              "debit": 0.0,
+              "credit": 500.0
+            }
+          ],
+          "notes": "Accountant confirmed this transfer connects chequing 4538 and savings 6244 and implied profile.account_relationships should be updated."
+        },
+        {
+          "transaction_id": "cand_04030102-453-8_004_split_a",
+          "date": "2024-07-08",
+          "description": "INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT A]",
+          "raw_description": "Interacpurchase-7305B001 COSTCOWHOLESAL",
+          "amount": 371.63,
+          "direction": "debit",
+          "account": "04030 102-453-8",
+          "currency": "CAD",
+          "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+          "classified_by": "accountant_confirmed",
+          "classification": {
+            "account": "Supplies and Materials",
+            "hst": "unknown",
+            "classified_by": "accountant_confirmed",
+            "reasoning": "Accountant requested splitting the Costco purchase into business supplies portion."
+          },
+          "je_lines": [
+            {
+              "account": "Supplies and Materials",
+              "debit": 221.63,
+              "credit": 0.0
+            },
+            {
+              "account": "RBC Business Chequing",
+              "debit": 0.0,
+              "credit": 221.63
+            }
+          ],
+          "notes": "Accountant requested splitting the Costco purchase into business supplies portion."
+        },
+        {
+          "transaction_id": "cand_04030102-453-8_004_split_b",
+          "date": "2024-07-08",
+          "description": "INTERACPURCHASE-7305B001 COSTCOWHOLESAL [SPLIT B]",
+          "raw_description": "Interacpurchase-7305B001 COSTCOWHOLESAL",
+          "amount": 371.63,
+          "direction": "debit",
+          "account": "04030 102-453-8",
+          "currency": "CAD",
+          "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+          "classified_by": "accountant_confirmed",
+          "classification": {
+            "account": "Shareholder Loan",
+            "hst": "exempt",
+            "classified_by": "accountant_confirmed",
+            "reasoning": "Accountant requested splitting the remaining Costco purchase to shareholder-use portion."
+          },
+          "je_lines": [
+            {
+              "account": "Shareholder Loan",
+              "debit": 150.0,
+              "credit": 0.0
+            },
+            {
+              "account": "RBC Business Chequing",
+              "debit": 0.0,
+              "credit": 150.0
+            }
+          ],
+          "notes": "Accountant requested splitting the remaining Costco purchase to shareholder-use portion."
+        }
+      ],
+      "artifacts": {
+        "scenario_results": [
+          {
+            "scenario": "选择带选项 pending 的选项",
+            "transaction": {
+              "transaction_id": "cand_04030102-453-8_001",
+              "date": "2024-04-01",
+              "description": "MONTHLYFEE",
+              "raw_description": "Monthlyfee",
+              "amount": 6.0,
+              "direction": "debit",
+              "account": "04030 102-453-8",
+              "currency": "CAD",
+              "balance": -6.0,
+              "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "resolved",
+            "action": "Selected Bank Charges and Fees / exempt",
+            "writes_observation": "unclear_due_missing_coa_contract"
+          },
+          {
+            "scenario": "直接提供明确科目名称",
+            "transaction": {
+              "transaction_id": "cand_04030102-624-4_002",
+              "date": "2025-01-02",
+              "description": "DEPOSITINTEREST",
+              "raw_description": "Depositinterest",
+              "amount": 9.86,
+              "direction": "credit",
+              "account": "04030 102-624-4",
+              "currency": "CAD",
+              "balance": 20009.86,
+              "bs_source": "Savings Statement-6244 2025-01-22 (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "resolved",
+            "action": "Assigned Interest Income",
+            "writes_observation": "probably_yes_but_not_specified_for_missing_coa"
+          },
+          {
+            "scenario": "提供业务信息但未指定科目",
+            "transaction": {
+              "transaction_id": "cand_04030102-453-8_002",
+              "date": "2024-12-12",
+              "description": "E-TRANSFERSENT NMEXPRESS ONLINEBANKINGTRANSFER-0559",
+              "raw_description": "e-Transfersent NMExpress OnlineBankingtransfer-0559",
+              "amount": 2000.0,
+              "direction": "debit",
+              "account": "04030 102-453-8",
+              "currency": "CAD",
+              "balance": 19885.98,
+              "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "still_pending",
+            "action": "Accountant said this was a vendor payment to NMExpress for logistics, but did not name a COA account",
+            "next_step": "Ask follow-up account-selection question or inject supplementary_context and rerun"
+          },
+          {
+            "scenario": "只回复部分交易",
+            "transaction": {
+              "transaction_id": "cand_04030102-453-8_002",
+              "date": "2024-04-02",
+              "description": "MISCPAYMENT MRCH30108740010 30108740010 ITEMRETURNEDNSF",
+              "raw_description": "MiscPayment MRCH30108740010 30108740010 ItemreturnedNSF",
+              "amount": 25.0,
+              "direction": "ambiguous",
+              "account": "04030 102-453-8",
+              "currency": "CAD",
+              "balance": -6.0,
+              "bs_source": "Chequing Statement-4538 2024-04-26 (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "still_pending",
+            "action": "No answer received for this recurring merchant-coded charge",
+            "next_step": "Retain in unresolved queue"
+          },
+          {
+            "scenario": "回复中包含 profile 变更信号",
+            "transaction": {
+              "transaction_id": "cand_04030102-453-8_007",
+              "date": "2024-12-22",
+              "description": "ONLINEBANKINGTRANSFER-7238 ONLINETRANSFERTODEPOSITACCOUNT-4968",
+              "raw_description": "OnlineBankingtransfer-7238 OnlineTransfertoDepositAccount-4968",
+              "amount": 500.0,
+              "direction": "debit",
+              "account": "04030 102-453-8",
+              "currency": "CAD",
+              "balance": 3570.13,
+              "bs_source": "Chequing Statement-4538 2024-12-27 (2) (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "resolved_with_profile_signal",
+            "action": "Confirmed as internal transfer and suggested adding an account_relationship between the two RBC accounts",
+            "profile_update_signal": true
+          },
+          {
+            "scenario": "要求拆分某笔交易",
+            "transaction": {
+              "transaction_id": "cand_04030102-453-8_004",
+              "date": "2024-07-08",
+              "description": "INTERACPURCHASE-7305B001 COSTCOWHOLESAL",
+              "raw_description": "Interacpurchase-7305B001 COSTCOWHOLESAL",
+              "amount": 371.63,
+              "direction": "debit",
+              "account": "04030 102-453-8",
+              "currency": "CAD",
+              "balance": 16131.73,
+              "bs_source": "Chequing Statement-4538 2024-07-26 (1).pdf",
+              "receipt": null,
+              "cheque_info": null,
+              "supplementary_context": null
+            },
+            "result": "resolved_via_split",
+            "action": "Split Costco transaction into business supplies and shareholder-use portions",
+            "split_amounts": [
+              221.63,
+              150.0
+            ]
+          }
+        ]
+      }
+    },
+    "issues": {
+      "bugs": [],
+      "interface_issues": [
+        {
+          "id": "CO-IF-001",
+          "description": "Duplicate transaction_id values across statements make partial-reply tracking and async state management unsafe.",
+          "upstream_provided": "Repeated cand_* ids from preprocessing.",
+          "expected": "Stable workflow-wide unique transaction identifiers for pending-state recovery.",
+          "impact": "Coordinator could attach accountant replies to the wrong transaction when multiple months reuse the same id."
+        },
+        {
+          "id": "CO-IF-002",
+          "description": "COA validation cannot be completed because no coa_data was supplied, even when accountant intent is clear.",
+          "upstream_provided": "coa_data: null",
+          "expected": "A chart of accounts for validating accountant-selected account names.",
+          "impact": "Resolved scenarios still carry validation risk and should be treated as mock transaction-log candidates only."
+        }
+      ],
+      "spec_ambiguities": [
+        {
+          "id": "CO-SA-001",
+          "description": "The spec implies coordinator can update profile-triggering context when accountants mention structure changes, but does not define whether that is immediate or advisory-only.",
+          "spec_text": "回复中包含 profile 变更信号",
+          "interpretation_a": "Coordinator should update profile immediately and retrigger the workflow.",
+          "interpretation_b": "Coordinator should record the signal and require a separate profile maintenance step.",
+          "recommendation": "Define whether profile mutations are in-band actions or merely flagged follow-up tasks."
+        },
+        {
+          "id": "CO-SA-002",
+          "description": "Split-transaction handling is described, but the post-split status of the original transaction is still underdefined.",
+          "spec_text": "split_transaction.py 拆分后，子交易从 Node 1 重新走 workflow",
+          "interpretation_a": "Original transaction becomes superseded and remains in the log with a pointer to children.",
+          "interpretation_b": "Original transaction is removed from the operative log entirely.",
+          "recommendation": "Specify the canonical status of the original row after split."
+        }
+      ]
+    },
+    "notes": [
+      "Coordinator scenarios were simulated on representative pending transactions rather than all 70 individually.",
+      "Five transaction-log candidates were produced as mock downstream inputs, including a split transaction that yielded two child rows.",
+      "Most pending transactions remain unresolved because the accountant scenarios intentionally covered only a subset."
+    ]
+  }
+}
