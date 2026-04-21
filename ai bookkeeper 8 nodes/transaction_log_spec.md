@@ -20,7 +20,8 @@ transaction_id: "txn_2024071802"
 date: "2024-07-18"
 description: "HOME DEPOT"
 raw_description: "HOME DEPOT 4521 TORONTO ON"
-amount: -156.78
+pattern_source: "dictionary_hit"
+amount: 156.78
 direction: "debit"
 balance: 11299.45
 currency: "CAD"
@@ -66,13 +67,14 @@ child_transaction_ids: null
 
 - **transaction_id**：交易的唯一标识，由数据预处理 Agent 生成，格式 `txn_{YYYYMMDD}{序号}`
 - **date**：交易日期，来自 BS 原始数据
-- **description**：标准化后的交易描述，来自数据预处理 Agent 的标准化输出
-- **raw_description**：银行原始描述原文，来自 BS 原始数据
-- **amount**：交易金额，来自 BS 原始数据
-- **direction**：交易方向（debit / credit），来自 BS 原始数据
+- **description**：标准化后的 canonical pattern，来自数据预处理 Agent 的标准化输出，是下游节点默认消费的交易描述字段
+- **raw_description**：银行原始描述原文，来自 BS 原始数据，主要用于审计留痕和 AI 参考，不作为默认的确定性匹配字段
+- **pattern_source**：pattern 标准化来源，取值 `dictionary_hit` / `llm_extraction` / `fallback`，用于审计和下游判断 pattern 可靠性
+- **amount**：交易金额的绝对值，`Decimal > 0`。银行原始正负号由数据预处理 Agent 统一转换，不在下游继续传递符号语义
+- **direction**：交易方向，严格取值 `debit` / `credit`。无法判断方向的记录不得进入主 Workflow，应在数据预处理阶段拦截并标记待人工确认
 - **balance**：交易后余额，来自 BS 原始数据
 - **currency**：币种，来自 BS 原始数据
-- **bank_account**：所属银行账户标识，来自 BS 原始数据 + profile.bank_accounts 映射
+- **bank_account**：所属银行账户标识，必须精确等于 `profile.bank_accounts[].id`，由数据预处理 Agent 从 BS 原始账户信息映射得到
 - **bs_source**：来源 BS 文件名，来自数据预处理 Agent 输出
 
 **第二层：分类结果**

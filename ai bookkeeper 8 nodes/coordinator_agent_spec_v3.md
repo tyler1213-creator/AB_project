@@ -33,10 +33,11 @@ Coordinator Agent 解决的核心问题是：**系统不知道怎么分类。** 
     # 原始交易数据
     "date": "2024-07-15",
     "description": "HOME DEPOT",
-    "amount": -2000.00,
+    "pattern_source": "dictionary_hit",
+    "amount": 2000.00,
     "direction": "debit",
     "raw_description": "HOME DEPOT 4521 TORONTO ON",
-    "account": "TD-CAD-5027013",
+    "bank_account": "TD-5027013",
     "currency": "CAD",
     "supplementary_context": "",
     "receipt": null,

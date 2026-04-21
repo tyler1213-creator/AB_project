@@ -37,7 +37,7 @@
 
 | 信息源 | 内容 | 加载方式 |
 | --- | --- | --- |
-| 交易数据 | date, description, amount, direction, raw_description, account, currency | 始终提供 |
+| 交易数据 | date, description, amount, direction, raw_description, pattern_source, bank_account, currency | 始终提供 |
 | supplementary_context | Coordinator Agent 在拆分交易后子交易重新走 workflow 时注入的额外说明 | 交易数据自带字段，非空时提供 |
 | cheque_info | cheque_number, payee, memo, match_method | 交易数据自带字段，非 null 时提供（仅 CHQ# 支票交易） |
 | receipt | vendor_name, items[], tax_amount, match_confidence | 交易数据自带字段，非 null 时提供 |
@@ -92,7 +92,7 @@
    → 未命中 → 加载 knowledge_base/vendors/common_vendors.md
 
 2. 组装交易层 prompt：
-   - 交易数据（date, description, amount, direction, raw_description, account, currency）
+   - 交易数据（date, description, amount, direction, raw_description, pattern_source, bank_account, currency）
    - supplementary_context（如果非空）
    - cheque_info（如果非 null，包含 cheque_number、payee、memo）
    - receipt（如果非 null）

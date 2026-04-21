@@ -32,10 +32,10 @@
 |----|---------------------------|------|
 | Date | date | 交易日期 |
 | Description | description | 标准化后的交易描述 |
-| Amount | amount | 交易金额（正=收入，负=支出） |
+| Amount | amount + direction | 报告展示金额。底层存储为绝对值金额，报告层结合 direction 展示收入/支出方向 |
 | Account | account | 分类科目 |
 | HST | hst | HST 处理方式（exempt / inclusive_13 / unknown） |
-| Pre-tax | je_lines 中费用/收入行的 amount | HST 拆分后的税前金额。exempt 和 unknown 时等于 Amount 绝对值 |
+| Pre-tax | je_lines 中费用/收入行的 amount | HST 拆分后的税前金额。exempt 和 unknown 时等于 amount |
 | HST Amount | je_lines 中 HST Receivable/Payable 行的 amount | HST 金额。exempt 和 unknown 时为 0 或空 |
 | Bank Account | bank_account | 所属银行账户 |
 | Classified By | classified_by | 分类来源（profile_match / rule_match / ai_high_confidence / accountant_confirmed） |
@@ -70,7 +70,7 @@ Section C 小计: [交易笔数] 笔, 总支出 $xxx, 总收入 $xxx
 |--------|---------------------|----------|
 | Date | date | 原样 |
 | Description | description | 原样 |
-| Amount | amount | 原样 |
+| Amount | amount + direction | 根据 `direction` 决定报告层显示为收入或支出；底层金额保持绝对值 |
 | Account | account | 原样 |
 | HST | hst | 原样 |
 | Pre-tax | je_lines | 从 je_lines 中提取费用/收入科目行的 amount |
