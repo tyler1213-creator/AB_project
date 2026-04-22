@@ -4,9 +4,9 @@
 
 ## 1. 职责定义
 
-在 accountant 审核输出报告时介入，接收 accountant 的自然语言修改指令，执行修改，并触发系统的长期学习更新。
+在 accountant 审核 `report_draft` 时介入，接收 accountant 的自然语言修改指令，执行修改，并触发系统的长期学习更新。
 
-审核 Agent 解决的核心问题是：**系统分类了但分错了。** 它处理的是已经完成分类、生成了 JE、出现在输出报告中的交易——系统当时认为是对的，但 accountant 在审核时发现了问题。
+审核 Agent 解决的核心问题是：**系统分类了但分错了。** 它处理的是已经完成分类、生成了 JE、出现在 `report_draft` 中的交易——系统当时认为是对的，但 accountant 在审核时发现了问题。
 
 **审核 Agent 同时承担规则管理职责。** 除了修正当期交易，审核 Agent 还负责处理 observations 的升级审批、rules 的手动创建和删除、observations 的状态标记管理。这些操作都发生在 accountant 审核阶段，是审核工作的自然延伸。
 
@@ -16,9 +16,9 @@
 
 ## 2. 触发条件
 
-主 Workflow 生成完整输出报告后，accountant 开始审核时启动。
+主 Workflow 生成 `report_draft` 后，accountant 开始审核时启动。
 
-审核 Agent 处理的交易来自输出报告的所有 Section：
+审核 Agent 处理的交易来自 `report_draft` 的所有 Section：
 
 | Section | 来源 | 为什么会出现在审核阶段 |
 | --- | --- | --- |
@@ -37,9 +37,9 @@
 
 ## 3. 输入
 
-### 输出报告
+### report_draft
 
-当前批次的完整输出报告（Excel 工作簿），包含所有交易的分类结果、JE、置信度标签、判断来源。
+当前批次的 `report_draft`，包含所有交易的分类结果、JE、置信度标签、判断来源。它是供审核使用的草稿视图，不等于审核完成后的最终 `.xlsx` 导出。
 
 ### 客户文件
 
@@ -81,7 +81,7 @@ review/
   scripts/                          ← 资源层 — Script
     process_profile_changes.py      ← 处理 Coordinator 阶段记录的 profile_change_requests
     update_profile.py               ← 更新 profile.md 中的指定字段
-    modify_je.py                    ← 修改输出报告中指定交易的 JE
+    modify_je.py                    ← 修改 report_draft 中指定交易的 JE
     build_je_lines.py               ← 根据交易数据 + 分类结果构造 je_lines（共用脚本，定义见 je_generator_spec.md §1.5）
     create_rule.py                  ← 创建新 rule
     modify_rule.py                  ← 修改 rule 的 account / hst
@@ -99,7 +99,7 @@ review/
   references/                       ← 资源层 — Reference
     current_rules.md                ← 当前客户的 rules（查看 rule 详情时加载）
     current_observations.md         ← 当前客户的 observations（查看历史分类时加载）
-    output_report.md                ← 当前输出报告（审核的对象）
+    output_report.md                ← 当前批次的 report_draft（审核对象，不是最终 .xlsx）
     upgrade_queue.md                ← 待升级 observations 列表（处理升级审批时加载）
     client_profile.md               ← 当前客户的 profile
     pending_profile_changes.md      ← Coordinator 阶段记录的待处理 profile 变更请求
@@ -112,7 +112,7 @@ review/
 ```markdown
 ---
 name: review
-description: 在 accountant 审核输出报告时介入。处理交易分类修正、rule 管理（创建/修改/删除）、
+description: 在 accountant 审核 `report_draft` 时介入。处理交易分类修正、rule 管理（创建/修改/删除）、
 observation 升级审批、observation 状态标记管理。当 accountant 审核当期账目并提出修改意见时使用此 Skill。
 ---
 
@@ -175,7 +175,7 @@ Accountant 直接指定了科目和/或 HST（如"改成 Subcontractor Expenses,
 
 ```
 → Agent 验证 accountant 指定的科目是否存在于 COA.csv
-  → 存在 → 调用 build_je_lines.py 构造 je_lines → validate_je 校验 → 调用 modify_je.py 更新输出报告
+  → 存在 → 调用 build_je_lines.py 构造 je_lines → validate_je 校验 → 调用 modify_je.py 更新 report_draft
   → 不存在 → 提示 accountant 科目不在 COA 中，请确认或指定其他科目
 → 调用 write_observation.py 写入分类结果（confirmed_by: accountant）
 → 后续处理 rule / observation 的连锁变更（见各场景具体步骤）
@@ -454,9 +454,9 @@ Accountant 在审核中发现 pattern 标准化有问题（如同一商户被拆
 
 ### modify_je.py
 
-- **用途**：修改输出报告中指定交易的 JE
+- **用途**：修改 `report_draft` 中指定交易的 JE
 - **输入**：transaction_id, new_je_data
-- **输出**：更新后的输出报告
+- **输出**：更新后的 `report_draft`
 
 ### build_je_lines.py
 
@@ -527,7 +527,7 @@ Accountant 在审核中发现 pattern 标准化有问题（如同一商户被拆
 - **用途**：从 Transaction Log 中查询历史交易
 - **输入**：查询条件（rule_id / pattern / 时间范围 / 金额范围 等）
 - **输出**：匹配的交易列表（含完整处理记录）
-- **说明**：替代之前从输出报告中扫描的方式，支持跨期查询
+- **说明**：替代之前从 `report_draft` 中扫描的方式，支持跨期查询
 
 ### merge_patterns.py
 
@@ -643,9 +643,9 @@ Intervention Log 记录 accountant 在审核阶段对系统分类结果的每次
 
 ### 允许
 
-- ✅ 读取 profile.md, rules.md, observations.md, COA.csv, tax_reference.md, 输出报告, Transaction Log, pending_profile_changes
+- ✅ 读取 profile.md, rules.md, observations.md, COA.csv, tax_reference.md, `report_draft`, Transaction Log, pending_profile_changes
 - ✅ 更新 profile.md（处理 Coordinator 阶段记录的 profile_change_requests，经 accountant 确认后写入）
-- ✅ 修改输出报告中的 JE（基于 accountant 指令）
+- ✅ 修改 `report_draft` 中的 JE（基于 accountant 指令）
 - ✅ 调用 build_je_lines.py 构造 je_lines + validate_je 校验（account + hst 由 accountant 决定）
 - ✅ 在 accountant 给出模糊信息时，结合 COA 生成选项请 accountant 选择
 - ✅ 创建新 rule（基于 accountant 指令）
@@ -675,7 +675,7 @@ Intervention Log 记录 accountant 在审核阶段对系统分类结果的每次
 
 | 交互对象 | 交互内容 | 交互时机 |
 | --- | --- | --- |
-| Accountant | 接收交易修改指令 | 审核输出报告时 |
+| Accountant | 接收交易修改指令 | 审核 `report_draft` 时 |
 | Accountant | 展示 rule 详情并询问处置方向 | 发现 rule 匹配的交易有问题时 |
 | Accountant | 查询并展示同 rule / 同 pattern 的历史交易 | Rule 被判定有问题时 |
 | Accountant | 展示 observation 历史并询问是否需要更改 | 发现 AI 判断的交易有问题时 |
@@ -700,7 +700,7 @@ Intervention Log 记录 accountant 在审核阶段对系统分类结果的每次
 
 | 组件 | 关系 |
 | --- | --- |
-| Node 6（输出报告） | 审核对象 |
+| Node 6（输出报告） | 产出 `report_draft` 供审核 Agent 审核；审核完成后才可进一步导出最终 `.xlsx` |
 | 维护流程（代码） | 提供待升级 observations 列表 |
 | Transaction Log | 提供历史交易查询能力 |
 | Accountant | 提供修改指令和审批决定 |
@@ -714,7 +714,7 @@ Intervention Log 记录 accountant 在审核阶段对系统分类结果的每次
 | Observations.md | 查看 pattern 历史分类记录 |
 | COA.csv | 验证科目 + 模糊场景下生成选项 |
 | tax_reference.md | 加拿大税务事实性参考 |
-| 输出报告 | 审核对象 |
+| `report_draft` | 审核对象 |
 | Transaction Log | 查询历史交易明细 |
 
 ### 可修改的文件
@@ -726,7 +726,7 @@ Intervention Log 记录 accountant 在审核阶段对系统分类结果的每次
 | Transaction Log | 更新已有交易的分类结果和决策依据（第二层 + 第三层） |
 | Intervention_log.md | 追加干预记录 |
 | Pattern Dictionary | 合并/重命名/拆分 pattern（基于 accountant 指令） |
-| 输出报告 | 修改 JE |
+| `report_draft` | 修改 JE |
 
 ### 不直接交互
 
