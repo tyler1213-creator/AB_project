@@ -40,11 +40,12 @@
 - Done when real-world issues are clearly distinguished from system-design issues
 
 ## Current status
-- Current phase: Phase 2 complete, Phase 3 not yet executed
+- Current phase: Phase 3 executed, Phase 4 in progress
 - Owner: Codex session
 - Last updated: 2026-04-21
 
 ## Open questions
 - Final contract for Node 1 transfer matching field remains unresolved
 - Cheque pattern standardization still has an open design bug
+- After the latest spec fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are now actually reachable
 - Dry run timeout / retry / partial-result behavior is not yet hardened enough

@@ -148,8 +148,9 @@ Onboarding Agent 创建初始 profile.md
 | 修改者 | 操作 | 触发条件 |
 | --- | --- | --- |
 | Onboarding Agent | 创建完整 profile | 新客户接入时 |
-| Coordinator Agent | 更新 bank_accounts / account_relationships / 其他字段 | 处理 PENDING 交易时 accountant 提供了新的公司结构信息 |
-| 审核 Agent | 更新任意字段 | 审核阶段 accountant 指出公司结构信息有变化 |
+| 审核 Agent | 更新 bank_accounts / account_relationships / 其他字段 | 处理 Coordinator 阶段记录的 profile_change_requests（经 accountant 确认后写入），或审核对话中 accountant 主动提出变更 |
+
+**Coordinator Agent 不直接修改 profile。** 它在处理 PENDING 交易时捕获 accountant 提供的 profile 变更信号，记录为结构化的 `profile_change_request`，由审核 Agent 在审核阶段统一处理写入。
 
 **所有 Agent 对 profile 的修改必须基于 accountant 提供的信息，不能自行推断或猜测公司结构。**
 
@@ -172,8 +173,9 @@ Onboarding Agent 创建初始 profile.md
 | 组件 | 关系 |
 | --- | --- |
 | Onboarding Agent | 创建初始 profile |
-| Coordinator Agent | 补充更新 |
-| 审核 Agent | 按 accountant 指令更新 |
+| 审核 Agent | 运行期 profile 更新（处理 Coordinator 阶段记录的变更请求 + 审核对话中 accountant 主动提出的变更） |
+
+**注意：** Coordinator Agent 只记录 profile_change_request，不直接修改 profile。
 
 ### 依赖
 

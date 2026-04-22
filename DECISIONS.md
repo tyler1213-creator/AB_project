@@ -73,3 +73,37 @@ Reason:
 
 Tradeoff:
 - remains an explicit open issue in `dry_run_buglist.md`
+
+### Split review-facing report_draft from final output export
+Reason:
+- the workflow and Review Agent need a pre-review snapshot
+- the final `.xlsx` should remain a post-review deliverable
+
+Tradeoff:
+- output layer now has two artifacts instead of one
+- review and export timing must be described separately
+
+### Chose HST/GST Receivable and HST/GST Payable as canonical control-account names
+Reason:
+- matches the synthetic foundation pack and JE builder contract
+- avoids downstream ambiguity in JE validation and reporting
+
+Tradeoff:
+- required cross-spec cleanup in JE, Transaction Log, and Output Report docs
+
+### Chose owner_uses_company_account as a default downgrade, not an absolute veto
+Reason:
+- receipt-backed and stable-observation cases still need a path to Section B
+- keeps synthetic dry run review-correction scenarios reachable
+
+Tradeoff:
+- Node 3 guidance becomes slightly more nuanced
+- stronger evidence thresholds must stay explicit to avoid overconfidence
+
+### Chose Coordinator-only ownership for runtime profile updates
+Reason:
+- keeps current-batch state changes in one place
+- avoids conflicting profile write paths between Coordinator and Review Agent
+
+Tradeoff:
+- Review Agent must surface profile-change signals without applying them directly

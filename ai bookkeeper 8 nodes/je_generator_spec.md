@@ -104,7 +104,7 @@ je_input:
   hst_type: "inclusive_13"                # exempt | inclusive_13 | unknown | internal_transfer
   je_lines:
     - { type: "debit", account: "Supplies & Materials", amount: 138.71 }
-    - { type: "debit", account: "HST Receivable", amount: 18.07 }
+    - { type: "debit", account: "HST/GST Receivable", amount: 18.07 }
     - { type: "credit", account: "Business Chequing", amount: 156.78 }
 ```
 
@@ -151,7 +151,9 @@ Step 4: hst_type 与行数一致性校验
   → internal_transfer: 恰好 2 行（1 debit + 1 credit）
 
 Step 5: hst_type 特定校验
-  → inclusive_13: 必须有一行 account = "HST Receivable"（debit 侧）
+  → inclusive_13:
+      - 支出类交易必须包含一行 `HST/GST Receivable`
+      - 收入类交易必须包含一行 `HST/GST Payable`
   → internal_transfer: 两行的 account 都必须是银行类科目（不含费用/收入科目）
 ```
 
@@ -189,7 +191,7 @@ je_lines:
 hst_type: "inclusive_13"
 je_lines:
   - { type: "debit", account: "Supplies & Materials", amount: 138.74 }
-  - { type: "debit", account: "HST Receivable", amount: 18.04 }
+  - { type: "debit", account: "HST/GST Receivable", amount: 18.04 }
   - { type: "credit", account: "Business Chequing", amount: 156.78 }
 
 # 收入示例：$1130.00（含 HST）
@@ -197,10 +199,10 @@ hst_type: "inclusive_13"
 je_lines:
   - { type: "debit", account: "Business Chequing", amount: 1130.00 }
   - { type: "credit", account: "Service Revenue", amount: 1000.00 }
-  - { type: "credit", account: "HST Payable", amount: 130.00 }
+  - { type: "credit", account: "HST/GST Payable", amount: 130.00 }
 ```
 
-注意：支出拆 HST 时 debit 侧是 HST Receivable（进项税可抵扣）；收入拆 HST 时 credit 侧是 HST Payable（销项税应缴）。调用方负责正确选择科目。
+注意：支出拆 HST 时 debit 侧是 `HST/GST Receivable`（进项税可抵扣）；收入拆 HST 时 credit 侧是 `HST/GST Payable`（销项税应缴）。调用方负责正确选择科目。
 
 **模版 3: unknown（HST 待定）**
 
@@ -261,7 +263,7 @@ result:
 | debit ≠ credit（超出 ±$0.01） | 返回 invalid + 差额详情 |
 | je_lines 缺少必填字段 | 返回 invalid + 缺失字段列表 |
 | hst_type 与 je_lines 行数不匹配 | 返回 invalid + 期望行数 vs 实际行数 |
-| inclusive_13 但无 HST Receivable/Payable 行 | 返回 invalid + 提示缺少 HST 行 |
+| inclusive_13 但无 HST/GST Receivable 或 HST/GST Payable 行 | 返回 invalid + 提示缺少 HST 行 |
 | internal_transfer 但包含费用/收入科目 | 返回 invalid + 提示内部转账不应有费用/收入科目 |
 | amount ≤ 0 | 返回 invalid + 指出哪一行 |
 | hst_type 不在合法值范围 | 返回 invalid + 合法值列表 |

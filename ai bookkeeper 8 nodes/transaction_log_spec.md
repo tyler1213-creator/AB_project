@@ -33,7 +33,7 @@ account: "Supplies & Materials"
 hst: "inclusive_13"
 je_lines:
   - { type: "debit", account: "Supplies & Materials", amount: 138.71 }
-  - { type: "debit", account: "HST Receivable", amount: 18.07 }
+  - { type: "debit", account: "HST/GST Receivable", amount: 18.07 }
   - { type: "credit", account: "Business Chequing", amount: 156.78 }
 
 # --- 第三层：决策依据 ---

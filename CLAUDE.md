@@ -84,4 +84,8 @@ Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，
 
 ## Current Focus
 
-（用时更新——当前无活跃开发模块。）
+- Phase 0 synthetic dry run findings have been fed back into the specs.
+- Remaining focus:
+  - rerun `synthetic_pack_v1` against the updated specs
+  - resolve `BUG-001` (cheque pattern standardization)
+  - resolve `BUG-002` (Node 1 transfer matching contract)
