@@ -14,11 +14,15 @@
 
 ## Phase 0: Dry Run + Contract Layer — 验证 spec 逻辑，定义接口契约
 
-**目标：** 用真实交易手动走完 pipeline，验证 spec 间能否串通；把确认的数据结构直接写成代码，作为所有节点的共享基础。
+**目标：** 先用可控的 synthetic 输入验证 system design / interface / state flow，再用真实交易验证真实世界输入问题；把确认的数据结构直接写成代码，作为所有节点的共享基础。
 
-### Step 1: 走查验证
+### Step 1: Synthetic Dry Run（优先）
 
-1. 准备多笔有代表性的真实交易（含简单交易 + 带 HST 的复杂交易）
+1. 准备一套完整的 synthetic pack：
+   - 结构化交易数据
+   - 完整 profile / COA / rules / observations
+   - 预期 routing map
+   - accountant simulation script
 2. 按 pipeline 顺序模拟：
    - Data Preprocessing：原始数据 → 标准化后的 transaction record 长什么样？
    - Node 1 Profile 匹配：匹配条件是什么、命中/未命中分别输出什么？
@@ -27,9 +31,23 @@
    - JE Generator：拿到分类结果后怎么生成借贷分录？
    - Coordinator：PENDING 交易的沟通内容和格式是什么？
    - Output Report：最终 Excel 里每列是什么？
-3. 记录发现的 spec 矛盾或模糊地带，修正 spec
+3. 重点检查：
+   - 节点接口是否匹配
+   - handoff schema 是否足够清楚
+   - split / retrigger / review / intervention 等状态流转是否自洽
+4. 记录发现的 spec 矛盾或模糊地带，修正 spec
 
-### Step 2: 代码化契约
+### Step 2: Real-World Dry Run（第二层）
+
+1. 准备多笔有代表性的真实交易（含简单交易 + 带 HST 的复杂交易）
+2. 用真实 bank statement / receipt / cheque image 跑同一套 pipeline
+3. 重点检查：
+   - OCR / parser / ingestion 问题
+   - 缺失资料下的行为
+   - 真实上下文中的 pending 比例和阻塞点
+4. 将“系统设计问题”和“真实输入问题”分开记录，避免混淆
+
+### Step 3: 代码化契约
 
 1. 定义共享数据结构（Python dataclass / Pydantic model）：
    - `TransactionRecord`：标准化后的交易记录 schema
@@ -43,8 +61,9 @@
 **产出：**
 - `contracts/` 目录，包含所有共享类型定义和接口签名——整个项目的单一真相来源
 - 各 spec 的修正记录
+- `Synthetic Dry Run Pack` 设计文档与 findings
 
-**用什么工具：** Step 1 是讨论会话，按需加载各节点 spec 逐段验证。Step 2 用 Superpowers brainstorming（设计 contract 结构）→ writing-plans → executing-plans。
+**用什么工具：** Synthetic Dry Run 优先使用工作流式编排；Real-World Dry Run 用于补充真实输入验证。契约代码化阶段使用 Superpowers brainstorming（设计 contract 结构）→ writing-plans → executing-plans。
 
 ---
 

@@ -1,0 +1,243 @@
+{
+  "source_bundle": {
+    "files": [
+      {
+        "path": "synthetic://northline-build-inc/july-pack-v1",
+        "file_type": "synthetic_bundle",
+        "notes": "Synthetic contract-test input. No OCR or PDF parsing should be evaluated in this run."
+      }
+    ],
+    "structured_candidates": [
+      {
+        "synthetic_case_id": "T01",
+        "date": "2024-07-03",
+        "bank_account": "TD-5027013",
+        "amount": 2500.0,
+        "direction": "debit",
+        "raw_description": "ONLINE BANKING TRANSFER TO SAVINGS 6337546",
+        "currency": "CAD",
+        "balance": 28145.42,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "internal_transfer_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T02",
+        "date": "2024-07-05",
+        "bank_account": "TD-5027013",
+        "amount": 189.99,
+        "direction": "debit",
+        "raw_description": "ROGERS WIRELESS 8887643771",
+        "currency": "CAD",
+        "balance": 27955.43,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "rules_match_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T03",
+        "date": "2024-07-08",
+        "bank_account": "TD-5027013",
+        "amount": 452.0,
+        "direction": "debit",
+        "raw_description": "HOME DEPOT 4521 TORONTO ON",
+        "currency": "CAD",
+        "balance": 27503.43,
+        "receipt": {
+          "vendor_name": "The Home Depot #4521",
+          "items": [
+            "Portland Cement x8",
+            "Rebar 10mm x12"
+          ],
+          "tax_amount": 52.0,
+          "match_confidence": "high"
+        },
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "node3_high_confidence_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T04",
+        "date": "2024-07-09",
+        "bank_account": "TD-5027013",
+        "amount": 84.79,
+        "direction": "debit",
+        "raw_description": "AMZN MKTP CA M8A2L4",
+        "currency": "CAD",
+        "balance": 27418.64,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "pending_with_options_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T05",
+        "date": "2024-07-10",
+        "bank_account": "TD-5027013",
+        "amount": 3200.0,
+        "direction": "debit",
+        "raw_description": "INTERAC E-TRANSFER JASON LEE",
+        "currency": "CAD",
+        "balance": 24218.64,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "pending_requires_accountant_context"
+        ]
+      },
+      {
+        "synthetic_case_id": "T06",
+        "date": "2024-07-11",
+        "bank_account": "TD-5027013",
+        "amount": 517.43,
+        "direction": "debit",
+        "raw_description": "COSTCO WHOLESALE #54 ETOBICOKE",
+        "currency": "CAD",
+        "balance": 23701.21,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "split_transaction_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T07",
+        "date": "2024-07-12",
+        "bank_account": "TD-5027013",
+        "amount": 5000.0,
+        "direction": "debit",
+        "raw_description": "CHQ#000176",
+        "currency": "CAD",
+        "balance": 18701.21,
+        "receipt": null,
+        "cheque_info": {
+          "cheque_number": "000176",
+          "payee": "944217 Ontario Inc",
+          "memo": "Excavation deposit",
+          "match_method": "cheque_number"
+        },
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "cheque_path",
+          "watch_bug_001"
+        ]
+      },
+      {
+        "synthetic_case_id": "T08",
+        "date": "2024-07-15",
+        "bank_account": "TD-5027013",
+        "amount": 146.32,
+        "direction": "debit",
+        "raw_description": "PAYMENT 7G5J-44NQ-CA",
+        "currency": "CAD",
+        "balance": 18554.89,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "force_fallback_pattern",
+          "no_observation_write_expected"
+        ]
+      },
+      {
+        "synthetic_case_id": "T09",
+        "date": "2024-07-15",
+        "bank_account": "TD-5027013",
+        "amount": 4200.0,
+        "direction": "debit",
+        "raw_description": "PAYROLL PAY JUL 15",
+        "currency": "CAD",
+        "balance": 14354.89,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "profile_constraint_path",
+          "profile_update_during_coordinator"
+        ]
+      },
+      {
+        "synthetic_case_id": "T10",
+        "date": "2024-07-16",
+        "bank_account": "TD-5027013",
+        "amount": 16.95,
+        "direction": "debit",
+        "raw_description": "MONTHLY FEE",
+        "currency": "CAD",
+        "balance": 14337.94,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "simple_bank_fee_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T11",
+        "date": "2024-07-18",
+        "bank_account": "TD-5027013",
+        "amount": 37.8,
+        "direction": "debit",
+        "raw_description": "SQ *URBAN CAFE TORONTO",
+        "currency": "CAD",
+        "balance": 14300.14,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "force_review_observation_path"
+        ]
+      },
+      {
+        "synthetic_case_id": "T12",
+        "date": "2024-07-19",
+        "bank_account": "TD-5027013",
+        "amount": 62.15,
+        "direction": "debit",
+        "raw_description": "DOLLARAMA #401 TORONTO",
+        "currency": "CAD",
+        "balance": 14237.99,
+        "receipt": null,
+        "cheque_info": null,
+        "supplementary_context": "",
+        "bs_source": "synthetic_july_chequing.csv",
+        "test_flags": [
+          "review_correction_path"
+        ]
+      }
+    ],
+    "source_notes": [
+      "This pack is intentionally synthetic and should be used to validate system design, not OCR or parser quality.",
+      "All amounts are already normalized to absolute value + direction for contract testing.",
+      "Synthetic case IDs T01-T12 should be preserved in notes or artifacts so the orchestrator can compare actual routing with expected routing."
+    ],
+    "explicit_unknowns": [
+      "Real-world OCR noise is intentionally excluded from this run.",
+      "The transfer matching field contract for Node 1 is still under active design discussion.",
+      "Cheque pattern standardization is intentionally included as a known watchpoint."
+    ]
+  }
+}

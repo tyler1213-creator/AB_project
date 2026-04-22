@@ -1,0 +1,209 @@
+{
+  "client_context": {
+    "client_id": "northline_build_inc",
+    "client_name": "Northline Build Inc.",
+    "province": "Ontario",
+    "hst_registered": true,
+    "hst_rate": 0.13,
+    "business_type": "Corporation",
+    "dry_run_mode": "synthetic_contract_test"
+  },
+  "profile_data": {
+    "industry": "Construction",
+    "business_type": "Corporation",
+    "owner_uses_company_account": true,
+    "has_employees": false,
+    "has_hst_registration": true,
+    "province": "Ontario",
+    "bank_accounts": [
+      {
+        "id": "TD-5027013",
+        "name": "TD Business Chequing",
+        "account": "Business Chequing"
+      },
+      {
+        "id": "TD-6337546",
+        "name": "TD Tax Savings",
+        "account": "Tax Savings"
+      }
+    ],
+    "account_relationships": [
+      {
+        "pattern": "ONLINE BANKING TRANSFER TO SAVINGS 6337546",
+        "from": "TD-5027013",
+        "to": "TD-6337546",
+        "type": "internal_transfer"
+      }
+    ],
+    "loans": [
+      {
+        "name": "Shareholder Loan",
+        "type": "shareholder_loan"
+      }
+    ]
+  },
+  "coa_data": [
+    {
+      "account": "Business Chequing",
+      "type": "Assets"
+    },
+    {
+      "account": "Tax Savings",
+      "type": "Assets"
+    },
+    {
+      "account": "HST/GST Receivable",
+      "type": "Assets"
+    },
+    {
+      "account": "HST/GST Payable",
+      "type": "Liabilities"
+    },
+    {
+      "account": "Telephone & Internet",
+      "type": "Expenses"
+    },
+    {
+      "account": "Supplies & Materials",
+      "type": "Cost of Goods Sold"
+    },
+    {
+      "account": "Office Supplies",
+      "type": "Expenses"
+    },
+    {
+      "account": "Subcontractor Expense",
+      "type": "Cost of Goods Sold"
+    },
+    {
+      "account": "Shareholder Loan",
+      "type": "Liabilities"
+    },
+    {
+      "account": "Bank Charges",
+      "type": "Expenses"
+    },
+    {
+      "account": "Meals & Entertainment",
+      "type": "Expenses"
+    },
+    {
+      "account": "Wages Expense",
+      "type": "Expenses"
+    }
+  ],
+  "rules_data": [
+    {
+      "rule_id": "R-001",
+      "pattern": "ROGERS WIRELESS",
+      "direction": "debit",
+      "account": "Telephone & Internet",
+      "hst": "inclusive_13",
+      "source": "approved_rule"
+    },
+    {
+      "rule_id": "R-002",
+      "pattern": "MONTHLY FEE",
+      "direction": "debit",
+      "account": "Bank Charges",
+      "hst": "exempt",
+      "source": "approved_rule"
+    }
+  ],
+  "observations_data": [
+    {
+      "pattern": "HOME DEPOT",
+      "direction": "debit",
+      "count": 4,
+      "months_seen": [
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+      ],
+      "amount_range": [
+        118.4,
+        611.28
+      ],
+      "confirmed_by": "accountant",
+      "classification_history": [
+        {
+          "account": "Supplies & Materials",
+          "hst": "inclusive_13",
+          "count": 4
+        }
+      ],
+      "non_promotable": false,
+      "force_review": false,
+      "accountant_notes": "Construction material purchases should usually land in Supplies & Materials when receipt supports job-site use."
+    },
+    {
+      "pattern": "SQ *URBAN CAFE TORONTO",
+      "direction": "debit",
+      "count": 3,
+      "months_seen": [
+        "2024-04",
+        "2024-05",
+        "2024-06"
+      ],
+      "amount_range": [
+        24.5,
+        88.2
+      ],
+      "confirmed_by": "accountant",
+      "classification_history": [
+        {
+          "account": "Meals & Entertainment",
+          "hst": "inclusive_13",
+          "count": 2
+        },
+        {
+          "account": "Shareholder Loan",
+          "hst": "exempt",
+          "count": 1
+        }
+      ],
+      "non_promotable": true,
+      "force_review": true,
+      "accountant_notes": "Urban Cafe can be client meeting meals or personal spend. Always ask."
+    },
+    {
+      "pattern": "DOLLARAMA",
+      "direction": "debit",
+      "count": 5,
+      "months_seen": [
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+      ],
+      "amount_range": [
+        18.2,
+        74.1
+      ],
+      "confirmed_by": "ai",
+      "classification_history": [
+        {
+          "account": "Office Supplies",
+          "hst": "inclusive_13",
+          "count": 5
+        }
+      ],
+      "non_promotable": false,
+      "force_review": false,
+      "accountant_notes": ""
+    }
+  ],
+  "tax_context": {
+    "province": "Ontario",
+    "default_hst_rate": 0.13,
+    "hst_receivable_account": "HST/GST Receivable",
+    "hst_payable_account": "HST/GST Payable"
+  },
+  "known_watchpoints": [
+    "BUG-001 cheque pattern standardization should be monitored during T07.",
+    "BUG-002 transfer matching field contract should be monitored during T01.",
+    "Fallback patterns must not be written to observations."
+  ]
+}
