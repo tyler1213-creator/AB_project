@@ -42,10 +42,11 @@
 ## Current status
 - Current phase: Phase 3 executed, Phase 4 in progress
 - Owner: Codex session
-- Last updated: 2026-04-21
+- Last updated: 2026-04-22
 
 ## Open questions
 - Final contract for Node 1 transfer matching field remains unresolved
 - Cheque pattern standardization still has an open design bug
 - After the latest spec fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are now actually reachable
+- Node 3 still needs a generalized `policy pack / activation predicate / evidence override` design so low-frequency risk rules do not keep expanding the stable prompt
 - Dry run timeout / retry / partial-result behavior is not yet hardened enough

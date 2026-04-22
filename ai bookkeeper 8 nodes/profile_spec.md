@@ -105,9 +105,9 @@ loans:
 
 Onboarding Agent 分析客户过去已由 accountant 做好的历史账本，提取公司结构信息构建 profile.md。
 
-### 来源三：Coordinator Agent 补充更新
+### 来源三：Coordinator Agent 捕获变更信号
 
-处理 PENDING 交易过程中，accountant 提供了新的公司结构信息（如新增银行账户关系），Coordinator Agent 更新 profile.md。
+处理 PENDING 交易过程中，accountant 可能提供新的公司结构信息（如新增银行账户关系、员工状态变化）。Coordinator Agent 不直接更新 profile.md，而是记录结构化的 `profile_change_request`，由审核 Agent 在审核阶段统一确认并写入。
 
 ---
 

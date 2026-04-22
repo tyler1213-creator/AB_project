@@ -37,7 +37,16 @@ Known watchpoints `BUG-001` and `BUG-002` were confirmed, but remain open.
 - Output layer now distinguishes `report_draft` for review from the final `.xlsx` export.
 - HST control-account naming is standardized to `HST/GST Receivable` and `HST/GST Payable`.
 - Node 3 now treats `owner_uses_company_account = true` as a confidence downgrade by default, not an absolute veto when strong disambiguating evidence exists.
-- Profile write ownership is aligned so Coordinator remains the only workflow actor that updates profile during runtime handling.
+- Follow-up design discussion later replaced this with a deferred model:
+  - Coordinator records structured `profile_change_request`
+  - Review Agent applies pending profile changes at the start of review
+
+## Post-Run Follow-up
+
+On 2026-04-22, two follow-up design decisions superseded part of the original remediation:
+
+1. Profile changes are no longer written directly by Coordinator; they are captured as structured requests and applied by Review Agent before transaction review.
+2. Future Node 3 exception handling should move toward progressive disclosure via code-selected policy/skill packs rather than continuing to expand the always-on stable prompt.
 
 ## Still Open
 

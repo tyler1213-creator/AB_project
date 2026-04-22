@@ -108,10 +108,11 @@
 
 - Initial profile says `has_employees = false`
 - Node 3 should treat payroll-like classification as structurally suspicious and route to pending
-- Coordinator script should update profile and classify transaction as:
+- Coordinator should capture a `profile_change_request` and classify transaction as:
   - account: `Wages Expense`
   - hst: `exempt`
-- This case tests whether profile updates can coexist with current batch resolution
+- Review Agent should process the pending profile change before normal transaction review
+- This case now tests whether deferred profile-change handling can coexist with current batch resolution
 
 ### T10
 

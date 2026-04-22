@@ -175,33 +175,6 @@ Dry run workflow 和 handoff schema 都要求 Output Report 节点在 Review Age
 
 ---
 
-## Cross-Node Ownership
-
-### BUG-006: Profile 写权限在 Profile / Coordinator / Review 之间定义不一致
-
-**严重程度：** 中
-
-**问题描述：**
-
-`profile_spec.md` 原先允许 Review Agent 更新 profile，但 `review_agent_spec_v3.md` 明确禁止 Review Agent 直接修改 profile，并要求 profile 变更通过 Coordinator 处理。
-
-**影响：**
-
-1. `T09` 这类“当前批次 pending + profile update”场景的所有权不清
-2. 同一种 profile 变更在不同会话阶段可能走出两套不同流程
-
-**涉及 spec：**
-
-- `ai bookkeeper 8 nodes/profile_spec.md`
-- `ai bookkeeper 8 nodes/review_agent_spec_v3.md`
-- `ai bookkeeper 8 nodes/coordinator_agent_spec_v3.md`
-
-**修复方向：**
-
-以 Coordinator 为运行时 profile 更新入口；Review Agent 只提示，不直接写 profile。
-
----
-
 ## Onboarding Agent
 
 （暂无 bug）

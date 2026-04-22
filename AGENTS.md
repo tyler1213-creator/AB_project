@@ -14,6 +14,7 @@
 - This repo is still spec-first; do not treat docs as optional.
 - Prefer first-principles reasoning over patching around bad design.
 - Do not add new components unless they solve a concrete problem.
+- For LLM context design, prefer progressive disclosure: keep the stable prompt minimal and let code conditionally load policy/skill packs only when their activation predicates fire.
 - Keep all contract decisions consistent across related specs.
 - Do not change public data contracts casually.
 - If a change affects multiple nodes, update upstream/downstream specs together.

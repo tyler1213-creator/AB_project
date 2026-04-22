@@ -100,10 +100,22 @@ Tradeoff:
 - Node 3 guidance becomes slightly more nuanced
 - stronger evidence thresholds must stay explicit to avoid overconfidence
 
-### Chose Coordinator-only ownership for runtime profile updates
+### Replaced Coordinator-direct profile writes with deferred profile_change_request handling
 Reason:
-- keeps current-batch state changes in one place
-- avoids conflicting profile write paths between Coordinator and Review Agent
+- after removing the practical need for same-batch retrigger, Coordinator no longer needed direct write access to `profile.md`
+- Coordinator can capture the signal precisely while Review Agent keeps the write path centralized and review-confirmed
+- avoids mid-batch profile mutations while still preserving the accountant's original statement as structured input
 
 Tradeoff:
-- Review Agent must surface profile-change signals without applying them directly
+- profile changes now primarily benefit the next batch, not the already-produced current-batch routing
+- synthetic references and dry-run expectations that assumed Coordinator direct writes must be updated
+
+### Prefer progressive disclosure for Node 3 exception logic
+Reason:
+- stable prompt growth will otherwise keep absorbing low-frequency risk rules
+- the existing classifier already has a good split between stable context, transaction context, and conditional loading
+- code-selected policy/skill packs are a cleaner way to represent exceptional risk logic such as retail-personal-use warnings
+
+Tradeoff:
+- requires a more explicit activation-predicate and evidence-override design
+- adds one more orchestration layer around the LLM call

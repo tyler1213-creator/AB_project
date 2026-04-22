@@ -77,7 +77,7 @@ coordinator/
 
   scripts/                          ← 资源层 — Script
     collect_pending.py              ← 收集并归组 PENDING 交易
-    update_profile.py               ← 更新 profile.md 字段
+    record_profile_change_request.py ← 记录待审核的 profile_change_request
     inject_context.py               ← 向交易写入 supplementary_context
     split_transaction.py            ← 拆分交易为多条标准格式
     retrigger_workflow.py           ← 触发指定交易重新进入 workflow

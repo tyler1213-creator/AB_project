@@ -104,12 +104,15 @@
 
 **Expected system effect:**
 
-- profile update:
-  - `has_employees = true`
+- Coordinator records a `profile_change_request`:
+  - field: `has_employees`
+  - new_value: `true`
+  - effective_date: `2024-07-01`
 - `T09` becomes `accountant_confirmed`
 - classification:
   - account: `Wages Expense`
   - hst: `exempt`
+- Review Agent later confirms and writes the profile change before normal transaction review
 
 ---
 
