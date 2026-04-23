@@ -1,7 +1,7 @@
 # TASK_STATE.md
 
 ## Current objective
-- Finish the remaining cross-spec follow-up after the Node 3 redesign and prepare for the next synthetic rerun.
+- Make `BUG-001` and `BUG-002` the first-priority work for the next window, then prepare for the next synthetic rerun.
 
 ## Completed
 - clarified that dry run exists to optimize system design for smoother implementation
@@ -45,6 +45,8 @@
 - the `policy_trace` part of that Node 3 redesign is now propagated into downstream interface specs where it is actually needed: Coordinator handoff and Transaction Log audit trail
 - `report_draft` remains intentionally review-facing and does not surface `policy_trace`
 - transaction identity / dedupe design is documented, but still not tested by executable workflow code
+- the only active Phase 0 design bugs still tracked in `dry_run_buglist.md` are `BUG-001` and `BUG-002`
+- next-window priority should start with resolving those two bugs before any rerun or secondary cleanup
 
 ## Files touched
 - `tools/transaction_identity_and_dedup_spec.md`
@@ -79,6 +81,7 @@
 - workflow timeout / retry / partial-result behavior is still underdesigned
 
 ## Next step
+- resolve `BUG-001` in the preprocessing / pattern-standardization contract
+- resolve `BUG-002` in the Node 1 / preprocessing / profile contract
 - rerun the synthetic pack against the updated specs
-- confirm T03 / T12 now cleanly exercise the intended Section B path
-- resolve `BUG-001` and `BUG-002` before Phase 5 real-world dry run
+- confirm T03 / T12 still cleanly exercise the intended Section B path

@@ -8,7 +8,8 @@
 1. Read `TASK_STATE.md` for current objective and real status.
 2. Read `PLANS.md` if the task touches system design, dry run, contracts, or multiple specs.
 3. Read `CLAUDE.md` for project overview and core rules.
-4. If touching cross-node behavior, read `supporting documents/development_workflow.md`.
+4. If continuing Phase 0 dry-run bug work, read `supporting documents/dry_run_buglist.md` and treat its active bugs as the immediate priority queue.
+5. If touching cross-node behavior, read `supporting documents/development_workflow.md`.
 
 ## Rules
 - This repo is still spec-first; do not treat docs as optional.
@@ -33,3 +34,4 @@
 - Update `TASK_STATE.md` after any meaningful design move.
 - Record only important tradeoffs in `DECISIONS.md`.
 - Keep `PLANS.md` current when phase or success criteria changes.
+- Keep `CLAUDE.md` and `dry_run_buglist.md` trimmed to current reality; remove solved items and stale focus bullets instead of letting historical status accumulate.

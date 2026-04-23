@@ -86,8 +86,6 @@ Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，
 
 - Phase 0 synthetic dry run findings have been fed back into the specs.
 - Remaining focus:
-  - decide whether and how Node 3 `policy_trace` should propagate into downstream specs, with `Coordinator` first and `Transaction Log` second
-  - align any downstream handoff/logging decisions with the deferred `profile_change_request -> Review Agent` ownership model
+  - next window's first priority is to resolve `BUG-001` (cheque pattern standardization) and `BUG-002` (Node 1 transfer matching contract)
   - rerun `synthetic_pack_v1` against the updated specs
-  - resolve `BUG-001` (cheque pattern standardization)
-  - resolve `BUG-002` (Node 1 transfer matching contract)
+  - after those two bug fixes, confirm the rerun still preserves the intended Section B / review-correction paths

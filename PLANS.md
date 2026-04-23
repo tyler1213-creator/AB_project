@@ -42,11 +42,11 @@
 ## Current status
 - Current phase: Phase 3 executed, Phase 4 in progress
 - Owner: Codex session
-- Last updated: 2026-04-22
-- Latest alignment: Node 3 `policy_trace` is now scoped to Coordinator handoff + Transaction Log, and intentionally excluded from `report_draft` columns
+- Last updated: 2026-04-23
+- Immediate next-window priority: resolve `BUG-001` and `BUG-002` before the next synthetic rerun
 
 ## Open questions
 - Final contract for Node 1 transfer matching field remains unresolved
 - Cheque pattern standardization still has an open design bug
-- After the latest spec fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are now actually reachable
+- After those two bug fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are still actually reachable
 - Dry run timeout / retry / partial-result behavior is not yet hardened enough

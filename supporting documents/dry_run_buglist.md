@@ -1,194 +1,251 @@
-# Phase 0 Dry Run — Bug List
+# Phase 0 Dry Run — Active Bug List
 
 ---
 
-## Data Preprocessing Agent
+只保留**当前仍未解决**、且仍影响系统设计 / 接口契约的真实问题。
 
-### BUG-001: CHQ 交易的 pattern 标准化丢失 payee 信息
+已解决并从本清单移除的历史项：
 
-**严重程度：** 高
-
-**问题描述：**
-
-`standardize_description(raw_description, client_id)` 接口不接受 `cheque_info` 参数。银行流水中所有支票交易的 raw_description 都是 `CHQ#000xxx` 格式（如 `CHQ#000176`），经过 Layer 1 预清洗后 cleaned_fragment 为 `CHQ#000176`，LLM 提取的 canonical pattern 只能是 `CHQ`——因为描述中不包含任何商户/收款人信息。
-
-**影响：**
-
-1. 所有支票交易无论收款人是谁，canonical pattern 都坍缩为 `CHQ`
-2. Observations 按 `(pattern, direction)` 聚合——所有支票支出被聚合到同一条 observation `(CHQ, debit)` 下，`classification_history` 混入多个不同科目，导致 `non_promotable: true`，永远无法升级为 rule
-3. Node 2 Rules 匹配失效——无法为不同的支票收款人建立独立的 rule
-4. Node 3 AI 分类器查找 observation 历史时，拿到的是混合了所有支票收款人的脏数据，置信度判断不可靠
-5. 支票交易的学习路径被完全切断：无法积累有意义的 observation → 无法升级 rule → 永远依赖 AI 或人工
-
-**触发条件：**
-
-Data Preprocessing Step 3（cheque image processing）在 Step 5（description standardization）之前执行，所以调用 `standardize_description` 时 `cheque_info`（含 payee_name）已经可用，但接口不接受这个参数。
-
-**涉及 spec：**
-
-- `tools/pattern_standardization_spec.md` — 接口定义缺少 `cheque_info` 参数
-- `ai bookkeeper 8 nodes/data_preprocessing_agent_spec_v3.md` — Step 3 产出 cheque_info，Step 5 调用 standardize_description 时未传递
-
-**修复方向（待确认）：**
-
-`standardize_description` 增加可选的 `cheque_info` 参数。当 `cheque_info` 存在且包含 `payee_name` 时，用 payee_name 作为 LLM 提取的基础，使 canonical pattern 变为具体收款人名称（如 `944217 ONTARIO INC`）而非 `CHQ`。
+- `BUG-003`：Output Report / Review Agent 的 `report_draft` 时序冲突
+- `BUG-004`：HST 控制科目命名与 revenue 校验不一致
+- `BUG-005`：`owner_uses_company_account` 对零售类 vendor 的高置信度限制过于绝对
+- Pattern Standardization 的 Layer 3 文档补全项
 
 ---
 
-### BUG-002: Node 1 / Pattern Standardization 在 transfer 匹配字段上的 contract 未定
+## BUG-001: CHQ 交易的 pattern 标准化仍会丢失收款人语义
 
-**严重程度：** 高
+**归属：** Data Preprocessing Agent / Pattern Standardization  
+**严重程度：** 高  
+**状态：** 未解决
 
-**问题描述：**
+### 问题本质
 
-Profile 中 `account_relationships.pattern`（如 `TFR-TO 6337546`）是基于银行原始流水字符串定义的。但 Data Preprocessing Agent 会产出标准化后的 `description`，而 Node 1 到底应该读取 `raw_description`、`description`，还是某个专门保留 transfer 信号的字段，当前 contract 还没有定死。
+当前 `standardize_description` 的接口仍以：
 
-这不是单一节点实现错误，而是 Data Preprocessing / Pattern Standardization / Node 1 之间的跨节点字段契约未明确。
+```python
+standardize_description(raw_description, client_id)
+```
 
-**影响：**
+为准，只吃银行流水原始描述，不吃已经在预处理前一步拿到的 `cheque_info`。
 
-1. Node 1 的内部转账识别逻辑无法正常工作
-2. 所有内部转账会穿透到 Node 2/3，被当作普通交易处理
-3. 无法正确生成 internal_transfer 类型的 JE（需要两个银行账户互借互贷）
+而支票交易的 `raw_description` 往往只有：
 
-**涉及 spec：**
+- `CHQ#000176`
+- `CHQ#000245`
 
-- `ai bookkeeper 8 nodes/profile_spec.md` — account_relationships.pattern 定义
-- `ai bookkeeper 8 nodes/data_preprocessing_agent_spec_v3.md` — Step 5 description standardization 在 pipeline 中的位置
-- `tools/pattern_standardization_spec.md` — standardize_description 的输出字段
+这类字符串本身不包含真正有业务意义的收款人信息。  
+所以即使 Step 3 已经从 cheque image 提取到了：
 
-**待决策：**
+- `payee`
+- `memo`
+- `cheque_number`
 
-需要确定 Node 1 的匹配目标：用 `raw_description` 匹配（保持 pattern 为银行原始格式），还是重新定义 `account_relationships.pattern` 为 canonical pattern 格式。该问题暂时保留在 buglist，待 contract 层统一决策后再回写各 spec。
+Step 5 在做 pattern 标准化时也用不上这些信息，最终只能把 canonical pattern 压成 `CHQ`。
 
----
+### 为什么这是系统级 bug
 
-## Node 1 — Profile Match
+这个问题不是“某笔交易分类不准”那么简单，而是**学习主键被破坏**。
 
-（暂无独立 bug；BUG-002 为跨节点 contract 问题，暂存于 buglist 待统一决策）
+本系统后续多个节点都把 `description` / canonical pattern 当成统一锚点：
 
----
+- Observations 按 `(pattern, direction)` 聚合
+- Rules 按 pattern 匹配
+- Node 3 按 pattern 查 observation 历史
+- Coordinator 按 pattern 归组展示 PENDING
 
-## Node 2 — Rules Match
+如果所有支票都共享同一个 pattern = `CHQ`，那系统相当于失去了“这张支票到底付给谁”的结构化记忆。
 
-（暂无 bug）
+### 当前错误链条
 
----
+1. cheque image processing 已经拿到 `cheque_info.payee`
+2. description standardization 仍只看 `raw_description`
+3. canonical pattern 被压成 `CHQ`
+4. 所有支票支出被聚合到同一 observation：`(CHQ, debit)`
+5. `classification_history` 混入多个完全不同的收款人和科目
+6. observation 变成脏聚合，通常只能走 `non_promotable: true`
+7. 规则学习路径和高置信度历史参考同时失效
 
-## Node 3 — AI Classifier
+### 影响范围
 
-### BUG-005: owner_uses_company_account 对零售类 vendor 的高置信度限制过于绝对
+1. **Observations 被污染**
+   同一条 `(CHQ, debit)` observation 会混入 subcontractor、rent、loan payment、owner draw 等完全不同语义。
 
-**严重程度：** 高
+2. **Rules 无法建立**
+   因为根本没有稳定的“支票收款人 pattern”，Node 2 无法为不同 payee 建独立 rule。
 
-**问题描述：**
+3. **Node 3 历史参考失真**
+   AI 查询到的 observation 历史不是某个 payee 的历史，而是一坨所有支票的混合历史。
 
-Node 3 spec 将 `profile.owner_uses_company_account = true` + 零售类 vendor 视为高置信度的硬性否决条件。这会把有强证据的交易也强行压回 PENDING，例如：
+4. **Coordinator 分组无意义**
+   PENDING 若按 `CHQ` 归组，会把不同收款人的支票错误地放在一起，降低 accountant 处理效率。
 
-1. `T03`：HOME DEPOT 且 receipt.items 已明确是施工材料
-2. `T12`：DOLLARAMA 且 observation 历史长期单一，用于验证 review correction 路径
+5. **支票学习路径被切断**
+   无法形成有意义 observation
+   → 无法升级 rule
+   → 永远依赖 AI / 人工。
 
-**影响：**
+### 触发条件
 
-1. synthetic pack 中设计好的 Section B / review correction 路径无法被真正触发
-2. receipt 作为最强信号的设计价值被削弱
-3. 系统会对一批本可高置信度处理的交易过度保守
+- Data Preprocessing Step 3 已经提取并写入 `cheque_info`
+- Step 5 仍调用 `standardize_description(raw_description, client_id)`
+- `standardize_description` contract 没有 `cheque_info` 输入位
 
-**涉及 spec：**
+### 当前相关 spec 现状
 
-- `ai bookkeeper 8 nodes/confidence_classifier_spec.md`
-- `dry_run_codex/dry-run-pipeline-workflow/references/synthetic_pack_v1/expected_routing_map.md`
+- [tools/pattern_standardization_spec.md](/Users/yunpengjiang/Desktop/AB%20project/tools/pattern_standardization_spec.md) 目前接口仍只接 `raw_description, client_id`
+- [ai bookkeeper 8 nodes/data_preprocessing_agent_spec_v3.md](/Users/yunpengjiang/Desktop/AB%20project/ai%20bookkeeper%208%20nodes/data_preprocessing_agent_spec_v3.md) 已明确 Step 3 先得到 `cheque_info`，Step 5 再做标准化
 
-**修复方向：**
+### 需要解决的设计决策
 
-将 `owner_uses_company_account` 从绝对 veto 调整为默认降置信度规则；当 receipt、supplementary_context 或稳定单一 observation 已提供足够强的业务反证时，允许高置信度。
+真正还没定死的不是“要不要修”，而是**怎么把 cheque 语义喂给 pattern 标准化，同时不破坏现有 pattern dictionary contract**。
 
----
+至少需要明确：
 
-## JE Generator
+1. `standardize_description` 是否要新增可选输入 `cheque_info`
+2. 当存在 `cheque_info.payee` 时，canonical pattern 的提取基础是否应改为 `payee`
+3. `memo` 是否只作为辅助解释，还是也允许参与 canonical pattern 生成
+4. payee 是否需要先做最小归一化，再写入 Pattern Dictionary
 
-### BUG-004: HST 控制科目命名与 revenue 校验规则不一致
+### 当前建议方向
 
-**严重程度：** 高
+优先方向仍是：
 
-**问题描述：**
+- `standardize_description` 增加可选 `cheque_info`
+- 当 `cheque_info.payee` 存在时，以 payee 为主语义来源生成 canonical pattern
+- `memo` 仅作为辅助 disambiguation，不默认进入 canonical pattern
 
-`build_je_lines.py` 使用 `HST/GST Receivable` / `HST/GST Payable`，但 `validate_je` 示例和校验规则仍写 `HST Receivable` / `HST Payable`，且 inclusive 校验只明确要求 receivable，没有把收入侧 payable 说清。
-
-**影响：**
-
-1. 同一 shared contract 在 JE / Transaction Log / Output Report 之间不一致
-2. 合法的收入类 inclusive JE 可能被错误判 invalid
-3. dry run 无法稳定判断哪个名字才是 canonical
-
-**涉及 spec：**
-
-- `ai bookkeeper 8 nodes/je_generator_spec.md`
-- `ai bookkeeper 8 nodes/transaction_log_spec.md`
-- `ai bookkeeper 8 nodes/output_report_spec.md`
-- `dry_run_codex/dry-run-pipeline-workflow/references/synthetic_pack_v1/client_foundation_pack.json`
-
-**修复方向：**
-
-统一使用 `HST/GST Receivable` / `HST/GST Payable`，并让 inclusive 校验同时覆盖支出侧 receivable 与收入侧 payable。
-
----
-
-## Coordinator Agent
-
-（暂无 bug）
-
----
-
-## Output Report
-
-### BUG-003: Output Report 的生成时机与 Review Agent 输入契约冲突
-
-**严重程度：** 高
-
-**问题描述：**
-
-Dry run workflow 和 handoff schema 都要求 Output Report 节点在 Review Agent 前生成 `report_draft`。但 `output_report_spec.md` 目前写的是“输出报告不是审核载体”，且“审核完毕后才按需生成”。
-
-**影响：**
-
-1. Step 7 → Step 8 的接口在 spec 层不闭环
-2. Review Agent 依赖的 Section A / B / C 输入来源不清
-3. 最终交付物与审核前快照被混成同一个概念
-
-**涉及 spec：**
-
-- `ai bookkeeper 8 nodes/output_report_spec.md`
-- `.claude/commands/dry-run-pipeline-workflow.md`
-- `dry_run_codex/dry-run-pipeline-workflow/agents/output_report.md`
-- `dry_run_codex/dry-run-pipeline-workflow/references/handoff_schema.md`
-
-**修复方向：**
-
-区分两个产物：审核前 `report_draft` 与审核后最终 `.xlsx` 导出。
+这样至少能让支票交易重新获得稳定、可学习的 pattern 主键。
 
 ---
 
-## Review Agent
+## BUG-002: Node 1 内部转账匹配读取哪个字段，跨节点 contract 仍未定
 
-（暂无 bug）
+**归属：** Profile / Data Preprocessing / Pattern Standardization / Node 1  
+**严重程度：** 高  
+**状态：** 未解决
 
----
+### 问题本质
 
-## Onboarding Agent
+当前 Profile 中的 `account_relationships.pattern` 写法像：
 
-（暂无 bug）
+- `TFR-TO 6337546`
+- `TFR-FR 6337546`
 
----
+这明显是**基于银行原始流水字符串**定义的匹配模式。  
+但 Data Preprocessing 在进入主 workflow 前，会把交易标准化为：
 
-## Shared Tools
+- `description`：canonical pattern，供下游默认消费
+- `raw_description`：仅保留原文，不作为默认确定性匹配字段
 
-### Pattern Standardization
+于是 contract 就卡住了：
 
-（BUG-001 同时涉及此工具，详见 Data Preprocessing Agent 节）
+Node 1 识别内部转账时，到底应该匹配哪一个？
 
-### Layer 3 文档补全（已修复）
+- `raw_description`
+- `description`
+- 还是一个专门给 transfer 保留的中间字段
 
-**问题描述：** Layer 3 LLM 提取后写回 Pattern Dictionary 的步骤在原 spec 的流程图中有简要提及，但 Layer 3 详细说明段落中缺少显式描述。
+现在这个问题还没有被系统级写死。
 
-**修复：** 已在 `tools/pattern_standardization_spec.md` Layer 3 部分补充"写回字典"段落，明确记录写回行为、key/value 来源和 source 标记。
+### 为什么这是跨节点 contract 问题
+
+这不是 Node 1 自己能局部补丁修掉的事，因为它同时牵涉四层定义：
+
+1. Profile 里 `account_relationships.pattern` 的语义是什么
+2. Pattern Standardization 输出的 `description` 语义是什么
+3. Data Preprocessing 应该把什么字段传给 Node 1
+4. Node 1 的确定性匹配究竟面向“原始银行信号”还是“canonical pattern”
+
+如果这四个地方口径不统一，Node 1 的内部转账识别一定会飘。
+
+### 当前错误风险
+
+如果 Node 1 误读 `description`：
+
+- 原始银行特有的转账信号可能在标准化过程中被压平
+- `account_relationships.pattern` 将无法稳定命中
+
+如果 Node 1 继续硬读 `raw_description`：
+
+- 那就等于 Node 1 成了例外节点，不再遵循“下游默认消费 canonical description”的主 contract
+- Profile 里的 `account_relationships.pattern` 也会继续绑定银行原文格式，迁移成本高
+
+所以真正的问题不是“哪个字段更顺手”，而是**内部转账匹配到底属于原始银行信号匹配，还是 canonical pattern 匹配**。
+
+### 影响范围
+
+1. **Node 1 无法稳定识别内部转账**
+   该拦住的 internal transfer 可能直接穿透到 Node 2 / Node 3。
+
+2. **下游会把内部转账当普通收支处理**
+   这会污染规则学习、AI 分类和 accountant review 路径。
+
+3. **JE 生成逻辑会出错**
+   internal transfer 需要基于两个银行账户关系生成对应分录，和普通 expense / revenue 不是同一语义。
+
+4. **Profile contract 不稳定**
+   `account_relationships.pattern` 这个字段到底在表达“原始银行字符串”还是“标准化后的 pattern”，现在文档还没有统一。
+
+### 当前相关 spec 现状
+
+- [ai bookkeeper 8 nodes/profile_spec.md](/Users/yunpengjiang/Desktop/AB%20project/ai%20bookkeeper%208%20nodes/profile_spec.md) 目前把 `account_relationships.pattern` 写成类似原始银行字符串
+- [ai bookkeeper 8 nodes/data_preprocessing_agent_spec_v3.md](/Users/yunpengjiang/Desktop/AB%20project/ai%20bookkeeper%208%20nodes/data_preprocessing_agent_spec_v3.md) 明确会输出 `description` 和 `raw_description`
+- [tools/pattern_standardization_spec.md](/Users/yunpengjiang/Desktop/AB%20project/tools/pattern_standardization_spec.md) 又明确说明 `description` 是下游默认消费字段，而 `raw_description` 不作为默认确定性匹配字段
+
+### 当前待决策的方案空间
+
+现在至少有三条可选路线，需要明确选一条：
+
+#### 方案 A：Node 1 继续匹配 `raw_description`
+
+优点：
+
+- 最贴近现有 `account_relationships.pattern` 写法
+- 对 transfer 类银行特有字符串最直接
+
+代价：
+
+- Node 1 成为下游里的“特殊节点”
+- `raw_description` 虽然被说成不是默认确定性匹配字段，但这里又变成关键匹配字段，contract 会变得例外化
+
+#### 方案 B：把 `account_relationships.pattern` 改成 canonical pattern，Node 1 匹配 `description`
+
+优点：
+
+- 整体 contract 更统一
+- Node 1 和其他节点都围绕 canonical pattern 工作
+
+代价：
+
+- 需要先证明 transfer 信号在标准化后仍足够稳定、可区分
+- 现有 Profile 里的写法和未来迁移策略都要重写
+
+#### 方案 C：新增 transfer 专用匹配字段
+
+例如保留一个专门表达“银行原始转账信号”的字段，Node 1 专门读它。
+
+优点：
+
+- 语义最清晰：`description` 管业务聚合，transfer_signal 管内部转账匹配
+
+代价：
+
+- 共享 transaction contract 会再多一个字段
+- 需要改上游输出、Node 1 输入、Profile 定义和 dry run pack
+
+### 当前建议方向
+
+这个问题现在仍不适合局部拍脑袋修。  
+更合理的下一步是先在 contract 层明确一句话：
+
+“Node 1 的 internal transfer 匹配，究竟是 canonical-pattern 语义，还是 bank-raw-signal 语义？”
+
+这句话一旦定了，后面才知道该改：
+
+- Profile 的 `account_relationships.pattern`
+- Data Preprocessing 输出字段
+- Pattern Standardization contract
+- Node 1 匹配逻辑
+
+在这句话没定之前，继续局部改某一份 spec 只会制造新的不一致。
