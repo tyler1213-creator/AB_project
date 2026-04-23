@@ -278,6 +278,8 @@ Step 5: 记录
 ```
 Accountant 指出某笔 Section B 交易分类有误
   → Agent 查找该交易的判断来源 → 确认为 AI 高置信度判断
+  → Agent 必要时按 transaction_id 从 Transaction Log 读取该笔的 ai_reasoning / policy_trace
+  → Agent 理解当时触发了哪些 risk packs、哪些 override evidence 让系统放行
   → Agent 加载该 pattern 的 observation 记录（references: current_observations.md）
   → Agent 向 accountant 展示 classification_history
   → Agent 询问："之前的分类记录是否也需要更改？"
@@ -509,7 +511,7 @@ Accountant 在审核中发现 pattern 标准化有问题（如同一商户被拆
 
 - **用途**：更新 Transaction Log 中已有交易的分类结果和决策依据
 - **输入**：transaction_id, 更新字段（account, hst, je_lines, classified_by, accountant_id, confirmed_info）
-- **执行逻辑**：根据 transaction_id 找到记录，更新第二层（account/hst/je_lines）和第三层（classified_by 改为 accountant_confirmed，填入 accountant_id 和 confirmed_info，清空不再适用的原字段如 rule_id / ai_reasoning）
+- **执行逻辑**：根据 transaction_id 找到记录，更新第二层（account/hst/je_lines）和第三层（classified_by 改为 accountant_confirmed，填入 accountant_id 和 confirmed_info，清空不再适用的原字段如 rule_id / ai_reasoning / policy_trace）
 - **说明**：仅审核 Agent 调用。第一层（交易事实）和第四层（补充证据）不可修改
 
 ### write_intervention_log.py
@@ -524,7 +526,7 @@ Accountant 在审核中发现 pattern 标准化有问题（如同一商户被拆
 
 ### query_transaction_log.py
 
-- **用途**：从 Transaction Log 中查询历史交易
+- **用途**：从 Transaction Log 中查询历史交易，必要时读取 AI 高置信度记录里的 `ai_reasoning` / `policy_trace`
 - **输入**：查询条件（rule_id / pattern / 时间范围 / 金额范围 等）
 - **输出**：匹配的交易列表（含完整处理记录）
 - **说明**：替代之前从 `report_draft` 中扫描的方式，支持跨期查询

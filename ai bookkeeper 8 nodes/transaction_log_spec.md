@@ -41,6 +41,11 @@ classified_by: "ai_high_confidence"
 rule_id: null
 profile_match_detail: null
 ai_reasoning: "HOME DEPOT 是建材零售商。小票显示购买 Portland Cement x3 和 Rebar 10mm x10，均为施工材料。客户行业为 Construction，分类为 Supplies & Materials。Observation 中该 pattern 历史 4 次均为相同分类。小票含 HST $18.07，与 inclusive_13 拆分结果一致。"
+policy_trace:
+  activated_packs: ["retail_personal_use_risk"]
+  blocking_packs: []
+  override_evidence: ["receipt_business_use", "stable_single_observation"]
+  unresolved_risks: []
 accountant_id: null
 confirmed_info: null
 
@@ -93,6 +98,7 @@ child_transaction_ids: null
 - **rule_id**：命中的 rule 编码，仅 classified_by = rule_match 时有值。来自 Node 2 匹配结果
 - **profile_match_detail**：命中的 account_relationship 信息，仅 classified_by = profile_match 时有值。来自 Node 1 匹配结果。记录匹配到的 account_relationship 条目内容（pattern、from、to、type），用于审计追溯 Node 1 的匹配依据
 - **ai_reasoning**：AI 的判断逻辑说明，仅 classified_by = ai_high_confidence 时有值。来自置信度分类器输出。内容需让不同水平的 accountant 都能看懂分类依据，包括：识别到的 vendor 类型、参考了哪些历史数据、小票/附件信息如何支持判断、HST 处理的依据
+- **policy_trace**：Node 3 的结构化策略轨迹，仅 classified_by = ai_high_confidence 时有值。记录激活了哪些 risk packs、哪些属于 blocking、哪些 override evidence 使交易仍可高置信度，以及是否存在 unresolved_risks。它服务于审计追溯和审核排错，不作为主 Workflow 的输入
 - **accountant_id**：做出分类确认的 accountant 姓名，仅 classified_by = accountant_confirmed 时有值。来自 Coordinator Agent 记录
 - **confirmed_info**：accountant 提供的业务信息或判断依据，仅 classified_by = accountant_confirmed 时有值。来自 Coordinator Agent 记录的 accountant 原话或摘要
 
@@ -130,7 +136,7 @@ child_transaction_ids: null
 | --- | --- | --- |
 | Node 1（Profile 匹配） | 交易命中 profile 中的 account_relationships | classified_by = profile_match，profile_match_detail |
 | Node 2（Rules 匹配） | 交易命中 rules.md 中的 rule | classified_by = rule_match，rule_id |
-| 置信度分类器 | AI 判断为高置信度 | classified_by = ai_high_confidence，ai_reasoning |
+| 置信度分类器 | AI 判断为高置信度 | classified_by = ai_high_confidence，ai_reasoning，policy_trace |
 | Coordinator Agent | Accountant 确认 PENDING 交易 | classified_by = accountant_confirmed，accountant_id，confirmed_info |
 
 ### 各层字段的写入来源
@@ -159,7 +165,7 @@ child_transaction_ids: null
 
 审核阶段 accountant 修正分类：
   → 更新第二层：account / hst / je_lines 为修正后的值
-  → 更新第三层：classified_by 改为 accountant_confirmed，填入 accountant_id 和 confirmed_info，清空不再适用的字段（rule_id / ai_reasoning 等）
+  → 更新第三层：classified_by 改为 accountant_confirmed，填入 accountant_id 和 confirmed_info，清空不再适用的字段（rule_id / ai_reasoning / policy_trace 等）
   → 修正详情（改前→改后、原因）记录在 Intervention Log
 
 交易被拆分：
@@ -197,7 +203,7 @@ child_transaction_ids: null
 
 | 操作 | 触发条件 |
 | --- | --- |
-| 更新第二层（account / hst / je_lines）+ 第三层（classified_by 改为 accountant_confirmed、填入 accountant_id 和 confirmed_info、清空原 rule_id / ai_reasoning 等不再适用的字段） | Accountant 在审核阶段修正了交易分类 |
+| 更新第二层（account / hst / je_lines）+ 第三层（classified_by 改为 accountant_confirmed、填入 accountant_id 和 confirmed_info、清空原 rule_id / ai_reasoning / policy_trace 等不再适用的字段） | Accountant 在审核阶段修正了交易分类 |
 | 更新 child_transaction_ids | 交易被拆分 |
 | 新增子交易记录 | 拆分交易时为每个子交易创建记录 |
 
@@ -213,7 +219,7 @@ child_transaction_ids: null
 | 数据预处理 Agent | 提供第一层（交易事实）和第四层（receipt / cheque_info）的数据 |
 | Node 1（Profile 匹配） | 提供 classified_by = profile_match 及 profile_match_detail |
 | Node 2（Rules 匹配） | 提供 classified_by = rule_match 及 rule_id |
-| 置信度分类器 | 提供 classified_by = ai_high_confidence 及 ai_reasoning |
+| 置信度分类器 | 提供 classified_by = ai_high_confidence 及 ai_reasoning、policy_trace |
 | Coordinator Agent | 提供 classified_by = accountant_confirmed 及 accountant_id、confirmed_info |
 | build_je_lines.py + validate_je | 提供 je_lines |
 

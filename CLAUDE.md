@@ -86,8 +86,8 @@ Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，
 
 - Phase 0 synthetic dry run findings have been fed back into the specs.
 - Remaining focus:
-  - formalize a Node 3 `policy pack / activation predicate / evidence override` design for progressive disclosure
-  - align synthetic references and dry run expectations with deferred `profile_change_request -> Review Agent` ownership
+  - decide whether and how Node 3 `policy_trace` should propagate into downstream specs, with `Coordinator` first and `Transaction Log` second
+  - align any downstream handoff/logging decisions with the deferred `profile_change_request -> Review Agent` ownership model
   - rerun `synthetic_pack_v1` against the updated specs
   - resolve `BUG-001` (cheque pattern standardization)
   - resolve `BUG-002` (Node 1 transfer matching contract)

@@ -119,3 +119,55 @@ Reason:
 Tradeoff:
 - requires a more explicit activation-predicate and evidence-override design
 - adds one more orchestration layer around the LLM call
+
+## 2026-04-22
+
+### Reframed Node 3 around a four-layer context model
+Reason:
+- the prior spec had started layering new policy-pack ideas on top of the old narrative without a single dominant structure
+- separating `Core Skill`, `Domain Packs`, `Risk / Exception Packs`, and `Evidence Overrides` makes Node 3's prompt strategy easier to reason about from first principles
+- this gives a cleaner home for low-frequency risk logic such as retail mixed-use warnings, payroll/profile conflicts, force-review gating, and fallback caution
+
+Tradeoff:
+- introduces more explicit orchestration concepts into the spec
+- requires careful downstream alignment so new concepts do not remain Node-3-only terminology
+
+### Chose code-driven risk-pack activation over profile-field rules embedded in always-on prompt text
+Reason:
+- profile flags such as `owner_uses_company_account` and `has_employees` are not themselves decisions; they are deterministic activation inputs for risk logic
+- letting code activate packs keeps the stable prompt smaller and makes the reason for a downgrade or block auditable
+- this structure also cleanly separates soft risk from blocking conditions
+
+Tradeoff:
+- classifier orchestration becomes more complex than a single static prompt recipe
+- downstream specs may need explicit contracts if they later want to consume pack traces
+
+### Chose current-batch profile snapshot semantics for Node 3
+Reason:
+- this keeps Node 3 consistent with deferred `profile_change_request -> Review Agent` ownership
+- avoids batch-midstream profile mutation changing classification behavior after some transactions have already run
+- preserves a clean rule: Coordinator captures profile change signals, Review Agent confirms and writes them, future batches benefit
+
+Tradeoff:
+- Node 3 cannot self-heal the current batch using newly surfaced profile corrections
+- some structurally blocked transactions must still be resolved via Coordinator / Review even when the accountant has already explained the issue
+
+### Chose to keep `policy_trace` as a Node 3 output before promoting it to a cross-spec contract
+Reason:
+- the new activation framework benefits from an explicit internal trace of activated packs and override evidence
+- but downstream interfaces should not be changed casually before deciding whether they truly need to consume that structure
+- this lets Node 3 stabilize first while preserving optionality for Coordinator / Transaction Log / report_draft integration
+
+Tradeoff:
+- for now, `policy_trace` exists as a local Node 3 design concept rather than a fully propagated system-wide field
+- follow-up work is still required if audit/reporting surfaces need to display it formally
+
+### Promoted `policy_trace` into Coordinator handoff and Transaction Log, but not `report_draft`
+Reason:
+- Coordinator needs structured pack/risk context to ask better questions for PENDING transactions, especially for blocking/profile-conflict cases
+- Transaction Log is the right audit surface for retaining AI-side pack activation and override evidence on `ai_high_confidence` decisions
+- `report_draft` should stay review-facing; exposing raw pack traces there would mix audit/debug detail into the accountant's primary review view
+
+Tradeoff:
+- downstream interfaces now carry one more structured field in the AI path
+- Review Agent must use Transaction Log, not the visible report, when it needs to inspect `policy_trace`
