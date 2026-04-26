@@ -72,9 +72,9 @@ child_transaction_ids: null
 
 - **transaction_id**：交易的永久唯一标识，由共享模块 `transaction_identity_and_dedup` 在 ingest 时分配，格式 `txn_<ULID>`。重复导入同一笔交易时必须复用同一 ID。它是 split / review / intervention / audit chain 的统一关联键
 - **date**：交易日期，来自 BS 原始数据
-- **description**：标准化后的 canonical pattern，来自数据预处理 Agent 的标准化输出，是下游节点默认消费的交易描述字段
+- **description**：canonical pattern，来自数据预处理 Agent 的输出，是下游节点默认消费的交易描述字段；当交易不存在可识别 identity signal 时可为 null
 - **raw_description**：银行原始描述原文，来自 BS 原始数据，主要用于审计留痕和 AI 参考，不作为默认的确定性匹配字段
-- **pattern_source**：pattern 标准化来源，取值 `dictionary_hit` / `llm_extraction` / `fallback`，用于审计和下游判断 pattern 可靠性
+- **pattern_source**：通过标准化工具生成 pattern 时的来源，取值 `dictionary_hit` / `llm_extraction` / `fallback`；若交易未经过标准化工具（如 cheque `payee` 直写或 `description = null`）则为 null
 - **amount**：交易金额的绝对值，`Decimal > 0`。银行原始正负号由数据预处理 Agent 统一转换，不在下游继续传递符号语义
 - **direction**：交易方向，严格取值 `debit` / `credit`。无法判断方向的记录不得进入主 Workflow，应在数据预处理阶段拦截并标记待人工确认
 - **balance**：交易后余额，来自 BS 原始数据
@@ -96,7 +96,7 @@ child_transaction_ids: null
   - `ai_high_confidence`：置信度分类器判断为高置信度并直接分类
   - `accountant_confirmed`：accountant 做出的分类决定（包括 Coordinator 阶段确认 PENDING 交易、审核阶段修正分类）
 - **rule_id**：命中的 rule 编码，仅 classified_by = rule_match 时有值。来自 Node 2 匹配结果
-- **profile_match_detail**：命中的 account_relationship 信息，仅 classified_by = profile_match 时有值。来自 Node 1 匹配结果。记录匹配到的 account_relationship 条目内容（pattern、from、to、type），用于审计追溯 Node 1 的匹配依据
+- **profile_match_detail**：命中的 account_relationship 信息，仅 classified_by = profile_match 时有值。来自 Node 1 匹配结果。记录匹配到的 account_relationship 条目内容（pattern、from、to、type），用于审计追溯 Node 1 的原始信号匹配依据
 - **ai_reasoning**：AI 的判断逻辑说明，仅 classified_by = ai_high_confidence 时有值。来自置信度分类器输出。内容需让不同水平的 accountant 都能看懂分类依据，包括：识别到的 vendor 类型、参考了哪些历史数据、小票/附件信息如何支持判断、HST 处理的依据
 - **policy_trace**：Node 3 的结构化策略轨迹，仅 classified_by = ai_high_confidence 时有值。记录激活了哪些 risk packs、哪些属于 blocking、哪些 override evidence 使交易仍可高置信度，以及是否存在 unresolved_risks。它服务于审计追溯和审核排错，不作为主 Workflow 的输入
 - **accountant_id**：做出分类确认的 accountant 姓名，仅 classified_by = accountant_confirmed 时有值。来自 Coordinator Agent 记录
@@ -184,7 +184,7 @@ child_transaction_ids: null
 | 读取者 | 时机 | 目的 |
 | --- | --- | --- |
 | 审核 Agent | 审核阶段 accountant 质疑某条 rule 或某笔交易时 | 按 rule_id 查询该 rule 匹配过的所有交易；按 transaction_id 查看单笔交易的完整信息 |
-| 审核 Agent | 审核阶段 accountant 要求按科目或 vendor 查询时 | 按 account / description / period 查询交易明细，支持 year-end 核对 |
+| 审核 Agent | 审核阶段 accountant 要求按科目或 vendor 查询时 | 优先按 account / description / period 查询；对 `description = null` 的交易需支持回退按 `raw_description` 查询 |
 | Accountant（通过审核 Agent） | Year-end 结账、CRA 审计应对、客户询问 | 从报表数字追溯到具体交易，从交易追溯到原始凭证和分类依据 |
 
 **Transaction Log 不被主 Workflow 的任何判断节点读取。** Node 1-4 和置信度分类器在处理交易时不查询 Transaction Log。Transaction Log 是纯输出端，不参与分类决策。
@@ -227,7 +227,7 @@ child_transaction_ids: null
 
 | 组件 | 关系 |
 | --- | --- |
-| 审核 Agent | 按 rule_id / account / description / period / transaction_id 查询交易明细 |
+| 审核 Agent | 按 rule_id / account / description / raw_description / period / transaction_id 查询交易明细 |
 
 ### 与 Intervention Log 的关系
 

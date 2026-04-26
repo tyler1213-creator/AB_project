@@ -86,6 +86,7 @@ Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，
 
 - Phase 0 synthetic dry run findings have been fed back into the specs.
 - Remaining focus:
-  - next window's first priority is to resolve `BUG-001` (cheque pattern standardization) and `BUG-002` (Node 1 transfer matching contract)
-  - rerun `synthetic_pack_v1` against the updated specs
-  - after those two bug fixes, confirm the rerun still preserves the intended Section B / review-correction paths
+  - next window's first priority is to discuss the **Onboarding Agent** and decide how its identity-signal / pattern logic should differ from or align with the main workflow
+  - keep the current main-workflow `BUG-001` / `BUG-002` contract as the settled baseline during that discussion
+  - after onboarding is clarified, rerun `synthetic_pack_v1` against the updated specs
+  - confirm the rerun still preserves the intended Section B / review-correction paths

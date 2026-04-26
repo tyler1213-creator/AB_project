@@ -171,3 +171,45 @@ Reason:
 Tradeoff:
 - downstream interfaces now carry one more structured field in the AI path
 - Review Agent must use Transaction Log, not the visible report, when it needs to inspect `policy_trace`
+
+## 2026-04-26
+
+### Chose an identity-signal-first contract for `description`
+Reason:
+- not every transaction contains a usable business-identity signal in `raw_description`
+- forcing all transactions through one canonical-pattern pipeline caused cheque and transfer edge cases to pollute learning
+- the correct first-principles question is whether the transaction exposes a recognizable counterparty / identity signal at all
+
+Tradeoff:
+- `description` can no longer be assumed present everywhere
+- downstream specs must explicitly handle `description = null`
+
+### Chose to allow `pattern_source = null`
+Reason:
+- some valid `description` values now come from outside `standardize_description` (for example cheque `payee`)
+- some transactions intentionally skip standardization entirely when no recognizable identity signal exists
+- forcing synthetic source labels onto those paths would blur audit semantics
+
+Tradeoff:
+- downstream consumers must distinguish `null` from `fallback`
+- the shared transaction contract becomes slightly more nuanced
+
+### Chose direct cheque payee as the current canonical pattern
+Reason:
+- cheque `payee` is the best available identity source in the current design
+- reusing the existing raw-description standardizer would incorrectly apply bank-description assumptions to cheque payees
+- delaying lightweight normalization is safer than over-designing it before more evidence exists
+
+Tradeoff:
+- cheque payee formatting may be less normalized than card / PAD patterns for now
+- a later cleanup pass may be needed once real-world cheque variation is better understood
+
+### Chose Node 1 internal-transfer matching to read `raw_description`
+Reason:
+- internal transfer recognition is a bank-raw-signal problem, not a canonical-pattern problem
+- `Profile.account_relationships.pattern` already expresses raw bank text fragments
+- keeping the match on `raw_description` avoids forcing transfer semantics into the learning-oriented pattern layer
+
+Tradeoff:
+- Node 1 is an explicit raw-signal consumer rather than a default-description consumer
+- `Profile` field names remain imperfect until a future naming cleanup

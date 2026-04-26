@@ -87,11 +87,11 @@ loans:
 
 **账户间关系**
 
-- **account_relationships**：客户银行账户之间的转账关系。Node 1 用此字段做内部转账的确定性匹配。每条关系包含 pattern（交易 description 中的匹配字符串）、from / to（源和目标账户 id）、type（关系类型，目前只有 `internal_transfer`）
+- **account_relationships**：客户银行账户之间的转账关系。Node 1 用此字段对交易 `raw_description` 做内部转账的确定性匹配。每条关系包含 pattern（原始银行描述中的匹配字符串）、from / to（源和目标账户 id）、type（关系类型，目前只有 `internal_transfer`）
 
 **贷款与信用额度**
 
-- **loans**：客户的贷款和信用额度列表。AI 层遇到定期固定金额的 debit 时，可参考此字段判断是否为还贷。每条记录包含 lender（贷方）、type（贷款类型）、account_pattern（交易 description 中的匹配字符串）、coa_account（对应的 COA 科目名称）
+- **loans**：客户的贷款和信用额度列表。AI 层遇到定期固定金额的 debit 时，可参考此字段判断是否为还贷。每条记录包含 lender（贷方）、type（贷款类型）、account_pattern（原始银行描述中的参考字符串）、coa_account（对应的 COA 科目名称）
 
 ---
 
@@ -135,7 +135,7 @@ Onboarding Agent 创建初始 profile.md
 
 | 读取者 | 时机 | 目的 |
 | --- | --- | --- |
-| Node 1（Profile 匹配） | 每笔交易进入主 Workflow 时 | 读取 account_relationships 做内部转账确定性匹配。匹配成功且 JE 生成后，调用 write_transaction_log.py 写入 Transaction Log（classified_by = profile_match，profile_match_detail） |
+| Node 1（Profile 匹配） | 每笔交易进入主 Workflow 时 | 读取 account_relationships，对交易 `raw_description` 做内部转账确定性匹配。匹配成功且 JE 生成后，调用 write_transaction_log.py 写入 Transaction Log（classified_by = profile_match，profile_match_detail） |
 | Node 3（置信度分类器） | 交易进入 AI 判断时 | 读取 industry、business_type、has_employees、owner_uses_company_account、loans 等作为判断上下文 |
 | build_je_lines.py | 构造 JE 时 | 读取 tax_config.rate 做 HST 拆分计算；读取 bank_accounts 确定银行科目 |
 | Coordinator Agent | 处理 PENDING 交易时 | 读取 profile 了解客户背景，辅助与 accountant 的沟通 |

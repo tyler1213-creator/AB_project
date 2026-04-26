@@ -10,6 +10,12 @@
 3. Read `CLAUDE.md` for project overview and core rules.
 4. If continuing Phase 0 dry-run bug work, read `supporting documents/dry_run_buglist.md` and treat its active bugs as the immediate priority queue.
 5. If touching cross-node behavior, read `supporting documents/development_workflow.md`.
+6. If discussing the current onboarding mismatch, read `ai bookkeeper 8 nodes/onboarding_agent_spec.md` and `supporting documents/deferred_items.md` before proposing changes.
+
+## Current handoff focus
+- Main-workflow handling for `BUG-001` / `BUG-002` is now spec-aligned.
+- The next window should start with the **Onboarding Agent discussion**, not another main-workflow rewrite.
+- Treat onboarding as a separate design problem unless and until its contract is explicitly resynced with the main workflow.
 
 ## Rules
 - This repo is still spec-first; do not treat docs as optional.
@@ -21,6 +27,11 @@
 - If a change affects multiple nodes, update upstream/downstream specs together.
 - Keep `dry_run_buglist.md` only for real design/interface bugs, not generic notes.
 - Synthetic dry run is for system-design validation, not OCR/parser evaluation.
+
+## Communication preferences
+- I do not need agreement. I need valuable, objective, and correct responses.
+- I strongly dislike patch-style fixes. Do not propose patching unless it is truly unavoidable.
+- Approach every problem from first principles. You may question any existing design.
 
 ## Validation
 - For spec work: check cross-doc consistency manually.

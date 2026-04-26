@@ -17,7 +17,7 @@
 
 **归属：** Data Preprocessing Agent / Pattern Standardization  
 **严重程度：** 高  
-**状态：** 未解决
+**状态：** 设计已收敛，待 cross-spec 落地核对
 
 ### 问题本质
 
@@ -107,15 +107,14 @@ Step 5 在做 pattern 标准化时也用不上这些信息，最终只能把 can
 3. `memo` 是否只作为辅助解释，还是也允许参与 canonical pattern 生成
 4. payee 是否需要先做最小归一化，再写入 Pattern Dictionary
 
-### 当前建议方向
+### 已定方向
 
-优先方向仍是：
-
-- `standardize_description` 增加可选 `cheque_info`
-- 当 `cheque_info.payee` 存在时，以 payee 为主语义来源生成 canonical pattern
-- `memo` 仅作为辅助 disambiguation，不默认进入 canonical pattern
-
-这样至少能让支票交易重新获得稳定、可学习的 pattern 主键。
+- 不把 cheque 语义硬塞进 `standardize_description`
+- 预处理先判断 identity signal：
+  - 若 `cheque_info.payee` 存在，当前版本直接将 `payee` 写入 canonical pattern
+  - 若不存在可识别 identity signal，则 `description = null`
+- cheque `payee` 直写路径不写 Pattern Dictionary，但可正常进入 observations / rules 学习
+- cheque `payee` 的轻量归一化延后设计，记录到 `deferred_items.md`
 
 ---
 
@@ -123,7 +122,7 @@ Step 5 在做 pattern 标准化时也用不上这些信息，最终只能把 can
 
 **归属：** Profile / Data Preprocessing / Pattern Standardization / Node 1  
 **严重程度：** 高  
-**状态：** 未解决
+**状态：** 设计已收敛，待 cross-spec 落地核对
 
 ### 问题本质
 
@@ -234,18 +233,9 @@ Node 1 识别内部转账时，到底应该匹配哪一个？
 - 共享 transaction contract 会再多一个字段
 - 需要改上游输出、Node 1 输入、Profile 定义和 dry run pack
 
-### 当前建议方向
+### 已定方向
 
-这个问题现在仍不适合局部拍脑袋修。  
-更合理的下一步是先在 contract 层明确一句话：
-
-“Node 1 的 internal transfer 匹配，究竟是 canonical-pattern 语义，还是 bank-raw-signal 语义？”
-
-这句话一旦定了，后面才知道该改：
-
-- Profile 的 `account_relationships.pattern`
-- Data Preprocessing 输出字段
-- Pattern Standardization contract
-- Node 1 匹配逻辑
-
-在这句话没定之前，继续局部改某一份 spec 只会制造新的不一致。
+- Node 1 的 internal transfer 匹配明确属于 **bank-raw-signal 语义**
+- Node 1 读取 `raw_description`
+- `Profile.account_relationships.pattern` / `loans.account_pattern` 本轮不改字段名，但语义明确为原始银行信号，不是 canonical pattern
+- 不新增 transfer 专用字段，也不强迫内部转账复用 canonical pattern 语义

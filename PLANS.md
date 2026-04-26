@@ -42,11 +42,10 @@
 ## Current status
 - Current phase: Phase 3 executed, Phase 4 in progress
 - Owner: Codex session
-- Last updated: 2026-04-23
-- Immediate next-window priority: resolve `BUG-001` and `BUG-002` before the next synthetic rerun
+- Last updated: 2026-04-26
+- Immediate next-window priority: begin the Onboarding Agent discussion before the next synthetic rerun
 
 ## Open questions
-- Final contract for Node 1 transfer matching field remains unresolved
-- Cheque pattern standardization still has an open design bug
+- Should Onboarding share the main-workflow identity-signal contract, adapt it, or keep a deliberately different historical-data path?
 - After those two bug fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are still actually reachable
 - Dry run timeout / retry / partial-result behavior is not yet hardened enough
