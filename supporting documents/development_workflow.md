@@ -10,6 +10,20 @@
 
 **核心原则：** 流程服务于质量，不是仪式。组件复杂度低时可以压缩步骤，但 contract 对齐和集成验证不能省。
 
+## Current Repo Note
+
+截至 `2026-04-27`，这个仓库的当前任务不是继续沿着旧系统 baseline 做局部修补，而是：
+
+1. 先收敛 `new system/new_system.md` 代表的 evidence-first 新 baseline
+2. 明确哪些 legacy 约束需要被保留进去
+3. 再基于这条新 baseline 组织下一轮 synthetic dry run
+
+因此，在当前窗口里：
+
+- 旧 node spec 主要是参考和迁移来源，不是默认工作目标
+- synthetic dry run 不应先于 baseline 收敛恢复
+- 如果讨论 legacy bug，必须说明它怎样服务于新 baseline，而不是回到旧 baseline 上继续补
+
 ---
 
 ## Phase 0: Dry Run + Contract Layer — 验证 spec 逻辑，定义接口契约
@@ -23,14 +37,13 @@
    - 完整 profile / COA / rules / observations
    - 预期 routing map
    - accountant simulation script
-2. 按 pipeline 顺序模拟：
-   - Data Preprocessing：原始数据 → 标准化后的 transaction record 长什么样？
-   - Node 1 Profile 匹配：匹配条件是什么、命中/未命中分别输出什么？
-   - Node 2 Rules 匹配：同上
-   - Node 3 AI 分类：输入什么、输出什么、confidence 怎么定？
-   - JE Generator：拿到分类结果后怎么生成借贷分录？
-   - Coordinator：PENDING 交易的沟通内容和格式是什么？
-   - Output Report：最终 Excel 里每列是什么？
+2. 按 active baseline 的 pipeline 顺序模拟：
+   - ingestion / preprocessing：原始数据进入系统后，标准化 transaction record 长什么样？
+   - identity / entity handling：系统如何识别对象、引用历史记忆、处理模糊匹配？
+   - deterministic layers：哪些结构性或规则性命中会在 AI 之前截断？
+   - AI judgment layer：模型在什么证据包上判断，输出什么，confidence 怎么定？
+   - JE / audit / review flow：分类结果如何生成分录、进入审计日志、进入 review / governance？
+   - output layer：最终给 accountant 的输出是什么？
 3. 重点检查：
    - 节点接口是否匹配
    - handoff schema 是否足够清楚
@@ -96,7 +109,7 @@
 **每个组件完成后必须做的：**
 - 单元测试通过
 - 与 contract 层的类型定义对齐（import contract 中的类型，不自己重新定义）
-- 更新 CLAUDE.md 的 Current Focus 和任何新的架构决策
+- 更新 `TASK_STATE.md` 的当前状态与下一步；如有非显而易见的取舍，再写入 `DECISIONS.md`
 
 **开发期 schema 迁移策略：** 开发阶段 SQLite schema 变更直接 drop + recreate，不做增量迁移。测试数据用脚本生成，保证可重建。进入 Phase 3 集成测试后如需改 schema，评估数据重建成本再决定。
 
@@ -124,7 +137,7 @@
 3. **完成后**：
    - 用真实数据跑通该节点与上游的衔接（不是等全部写完再集成）
    - 如果发现 contract 需要修改 → **先改 contract，再改受影响的已完成节点，最后继续当前节点**
-   - 更新 CLAUDE.md
+   - 更新 `TASK_STATE.md`；如有重要 tradeoff，再更新 `DECISIONS.md`
 
 **级联修改处理流程：**
 ```
@@ -174,10 +187,11 @@
 
 这些规则贯穿所有 Phase，是防止"脱节"的核心纪律：
 
-### 1. CLAUDE.md 是持久化的 PM
-- `Current Focus`：当前在开发哪个节点、进展到哪一步
-- `Architecture Decisions`：新增的设计决策和理由
-- 每个会话结束时更新
+### 1. 入口与状态文档分工明确
+- `AGENTS.md`：当前工作入口、阅读顺序、窗口 handoff
+- `TASK_STATE.md`：当前目标、当前状态、风险、下一步
+- `DECISIONS.md`：只记录重要 tradeoff 和为什么选这个方向
+- `CLAUDE.md`：稳定总纲，不承担动态 handoff
 
 ### 2. Contract 层是单一真相来源
 - 所有节点的数据结构都 import 自 `contracts/`
@@ -203,4 +217,11 @@
 - **默认规则**：一个组件（Phase 1）或一个节点（Phase 2）= 一个会话
 - **级联修改**：每个受影响节点单独一个会话
 - **Phase 0**：可以是一个较长的会话，走查和契约定义是连续思考过程
-- 每个会话结束前更新 CLAUDE.md 的 Current Focus
+- 每个会话结束前更新 `TASK_STATE.md`，必要时补充 `DECISIONS.md`
+
+### 7. 双轨设计期的额外约束
+- 如果仓库同时存在旧系统 baseline 和新系统重构草案，必须先明确本次讨论或修改基于哪一套 baseline
+- 当前 repo 状态下，默认工作 baseline 是 `new system/new_system.md`，不是旧 node spec
+- 旧 node spec 主要用于提取可复用约束、比较差异、规划迁移顺序
+- 不要把新系统前提偷偷写回旧 node spec，除非任务本身就是迁移或重写 legacy spec
+- synthetic dry run 只应在目标 baseline 足够清楚时恢复，不要一边改 baseline 一边继续跑旧脚本

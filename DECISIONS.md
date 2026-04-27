@@ -213,3 +213,36 @@ Reason:
 Tradeoff:
 - Node 1 is an explicit raw-signal consumer rather than a default-description consumer
 - `Profile` field names remain imperfect until a future naming cleanup
+
+## 2026-04-27
+
+### Chose to document the evidence-first redesign in separate specs instead of rewriting legacy node specs in place
+Reason:
+- the redesign changes the system at the memory-architecture level, not just one node
+- rewriting old node specs before adoption would blur the boundary between legacy baseline and proposed replacement
+- separate specs make it possible to compare architectures cleanly and decide migration order from first principles
+
+Tradeoff:
+- the repo now intentionally carries two parallel design layers for a period of time
+- future discussions must be explicit about whether they refer to the legacy node baseline or the new evidence-first redesign
+
+### Slimmed `CLAUDE.md` and moved active entry responsibility to `AGENTS.md`
+Reason:
+- `CLAUDE.md` had started mixing stable project charter content with dynamic focus, handoff, and migration status
+- `AGENTS.md`, `TASK_STATE.md`, and `PLANS.md` already carry the dynamic working context more cleanly
+- keeping `CLAUDE.md` as a low-churn charter reduces drift and duplicate maintenance
+
+Tradeoff:
+- readers must now follow the documented entry order instead of expecting `CLAUDE.md` to contain current task state
+- some cross-file navigation becomes more explicit, but less self-contained in one document
+
+### Chose to make new-system convergence the current working phase before the next synthetic rerun
+Reason:
+- the main unresolved problems now sit in the new system's memory, matching, and governance design, not in another round of legacy main-workflow patching
+- the most useful next dry run is one that validates the evidence-first baseline after it has absorbed the legacy system's valuable hard boundaries
+- keeping legacy specs untouched while using them as reference sources is a cleaner way to preserve good constraints without pretending they are still the active design target
+
+Tradeoff:
+- entry docs must now say more clearly that old specs are reference material while `new system/` is the current design target
+- dry-run work is temporarily delayed until the new baseline is coherent enough to test end-to-end
+- migration order for rewriting legacy specs is still deferred until after that new-baseline dry run

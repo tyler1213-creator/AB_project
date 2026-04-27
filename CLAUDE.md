@@ -1,92 +1,157 @@
 # AI Bookkeeper
 
+## Document Role
+
+`CLAUDE.md` 现在只保留**稳定总纲**。  
+它不再承担当前窗口 handoff、动态优先级、或迁移过程中的临时状态说明。
+
+**当前工作入口一律以 [AGENTS.md](/Users/yunpengjiang/Desktop/AB%20project/AGENTS.md) 为主。**
+
+如果你要开始一个新任务，默认顺序应是：
+
+1. `AGENTS.md`
+2. `TASK_STATE.md`
+3. `PLANS.md`
+4. 再按任务加载对应 spec
+
+---
+
 ## Project Overview
 
-为加拿大会计师事务所构建的 AI Bookkeeping 系统。Accountant 上传客户银行流水和附件，系统自动分类交易、生成 Journal Entry（JE），输出审核报告供校验。业务约束：加拿大 HST/GST 税制、double-entry bookkeeping、CRA 审计合规（7 年保留）。
+为加拿大会计师事务所构建的 AI Bookkeeping 系统。Accountant 上传客户银行流水和附件，系统自动分类交易、生成 Journal Entry（JE），输出审核报告供校验。业务约束包括：
 
-当前阶段：**设计完成、实现未开始**。仓库里是 spec，不是代码。
+- 加拿大 HST/GST 税制
+- double-entry bookkeeping
+- CRA 审计追溯与 7 年保留要求
 
-## Tech Stack
+当前仓库仍是 **spec-first、设计优先** 阶段。这里主要存放系统设计文档，不是实现代码仓库。
 
-（待补充 —— 目前 spec 未锁定具体实现栈。SQLite 用于 Pattern Dictionary 和 Intervention Log，Excel 为最终交付格式，其余未定。）
+---
 
 ## Project Structure
 
-```
-ai bookkeeper 8 nodes/     # 各节点完整 spec（按需加载，见下方 Context Documents）
-tools/                     # 共享工具 spec（未来放 .py 实现）
+```text
+ai bookkeeper 8 nodes/     # 旧系统 node spec（当前主要作为参考与迁移来源）
+tools/                     # 共享工具 spec
 COA/                       # Chart of Accounts 相关资源
-supporting documents/      # 跨节点的设计文档（沟通偏好、deferred items、spec 格式约定）
+supporting documents/      # 跨节点设计文档、流程文档、deferred 项
+new system/                # evidence-first 新系统重构草案
 tricks.md                  # 临时记录
 ```
 
-## Development Commands
+---
 
-（待补充 —— 暂无实现代码，无构建/测试/运行命令。）
+## Stable Architecture Principles
 
-## Architecture Decisions
+### WAT 分层
 
-**WAT 分层**（Workflows × Agents × Tools）：workflow 是 markdown SOP，agent 是决策者（Claude 的角色），tool 是确定性 Python 脚本。AI 负责编排，脚本负责执行。
+- `workflow（工作流）` = markdown SOP / 状态流
+- `agent（代理）` = 做决策的智能层
+- `tool（工具）` = 确定性脚本 / 存储 / 计算模块
 
-**主 workflow 瀑布式三层分类**：
-```
+原则是：
+
+- AI 负责编排与判断
+- code 负责确定性执行
+
+### Legacy Workflow Baseline
+
+旧系统 node spec 记录的是这条瀑布式 workflow：
+
+```text
 数据预处理 → Node 1 (Profile 匹配) → Node 2 (Rules 匹配) → Node 3 (AI 分类器)
           → Coordinator (PENDING 沟通) → 输出报告 → 审核 Agent (修正 + 规则管理)
 ```
-Node 1/2 为确定性匹配，Node 3 为 AI 判断。前一层命中即落地，未命中才下传。
 
-**数据存储职责单一**：每个存储只回答一个问题。
-- Profile = 客户是谁
-- Rules = 这个 pattern 怎么分
-- Observations = 这个 pattern 历史上怎么分
-- Transaction Log = 这笔交易为什么这么分
-- Intervention Log = accountant 为什么改
+- Node 1 / Node 2 = 确定性匹配
+- Node 3 = AI 判断兜底
+- 上一层命中即落地，未命中才下传
 
-**classified_by 四种取值**：`profile_match` / `rule_match` / `ai_high_confidence` / `accountant_confirmed`。
+### 当前重构方向
+
+- 当前设计工作以 `new system/new_system.md` 为主。
+- 旧系统 spec 仍然有价值，但主要作为约束来源、比较对象和未来迁移输入。
+- 当前到底在做什么，一律以 `AGENTS.md` 和 `TASK_STATE.md` 为准。
+
+### 数据存储单一职责
+
+每个存储只回答一个问题：
+
+- `Profile（客户结构档案）` = 客户是谁、结构是什么
+- `Rules（规则）` = 哪些交易可以被系统直接确定性执行
+- `Observations（观察记录）` = 某类交易历史上怎么分过
+- `Transaction Log（交易审计日志）` = 这笔交易为什么这么分
+- `Intervention Log（人工干预日志）` = accountant 为什么改
+
+---
 
 ## Critical Rules
 
-- **IMPORTANT：确定性优先**。能用代码解决的不要用 AI。AI 是兜底。
-- **IMPORTANT：Accountant 拥有最终决定权**。Agent 辅助但不替代，所有分类以 accountant 确认为准。
-- **MUST：agent 对 Profile/Rules/Observations 的任何修改，必须基于 accountant 的明确指令**，不能自行推断或"优化"。
-- **MUST：Transaction Log 只写+查询，不参与分类决策**。Node 1/2/3 和 Coordinator 只写，不读回来做判断。
-- **MUST：Rules 升级必须 accountant 批准**，observation 达到阈值只是进入待升级队列。
-- **例外不污染 observations**：accountant 判定为"这笔是例外"（rule/AI 本身没错）时，只改当期 JE，不写入 observation 的 classification_history；只有判定为"规则/AI 判断有误"时才回写。
-- **讨论具体节点时按需加载对应 spec**，不要一次性拉完全部 spec。
+- **确定性优先。** 能由 code 稳定解决的，不应交给 AI。
+- **Accountant 拥有最终决定权。** Agent 只能辅助，不能替代。
+- **Profile / Rules / Observations 的高 authority 修改必须基于 accountant 明确指令。**
+- **Transaction Log 只写和查询，不参与主 workflow 分类决策。**
+- **Rules 的升级必须经过治理，不应把一次性判断直接制度化。**
+- **例外不应污染长期学习层。** 如果 accountant 判断“这笔只是例外”，应修正当期结果，但不要把例外当成一般规律回写。
+- **讨论新系统时，不能把新假设偷偷混进旧 node spec。** 新系统内容统一看独立草案。
+
+---
 
 ## Context Documents
 
-按任务类型加载对应 spec：
+### 工作入口
+
+- [AGENTS.md](/Users/yunpengjiang/Desktop/AB%20project/AGENTS.md) — 当前工作入口、阅读顺序、handoff 重点
+- [TASK_STATE.md](/Users/yunpengjiang/Desktop/AB%20project/TASK_STATE.md) — 当前目标、已完成内容、风险、下一步
+- [PLANS.md](/Users/yunpengjiang/Desktop/AB%20project/PLANS.md) — 阶段、目标、开放问题
+
+### 旧系统基线 spec
 
 **数据存储节点**
-- [profile_spec.md](ai%20bookkeeper%208%20nodes/profile_spec.md) — 客户结构性身份信息；Node 1 的匹配逻辑也在此
-- [rules_spec_v2.md](ai%20bookkeeper%208%20nodes/rules_spec_v2.md) — 确定性规则定义与 Node 2 匹配逻辑
-- [observations_spec_v2.md](ai%20bookkeeper%208%20nodes/observations_spec_v2.md) — pattern 历史聚合与升级路径
-- [transaction_log_spec.md](ai%20bookkeeper%208%20nodes/transaction_log_spec.md) — 五层审计结构与字段定义
+
+- [profile_spec.md](ai%20bookkeeper%208%20nodes/profile_spec.md)
+- [rules_spec_v2.md](ai%20bookkeeper%208%20nodes/rules_spec_v2.md)
+- [observations_spec_v2.md](ai%20bookkeeper%208%20nodes/observations_spec_v2.md)
+- [transaction_log_spec.md](ai%20bookkeeper%208%20nodes/transaction_log_spec.md)
 
 **处理节点**
-- [data_preprocessing_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/data_preprocessing_agent_spec_v3.md) — 原始文件解析、配对、标准化
-- [confidence_classifier_spec.md](ai%20bookkeeper%208%20nodes/confidence_classifier_spec.md) — Node 3 AI 分类器，含信息源优先级
-- [je_generator_spec.md](ai%20bookkeeper%208%20nodes/je_generator_spec.md) — build_je_lines 与 validate_je
-- [coordinator_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/coordinator_agent_spec_v3.md) — PENDING 交易与 accountant 沟通
-- [review_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/review_agent_spec_v3.md) — 审核修正、规则管理、Intervention Log（第 7 节）
-- [output_report_spec.md](ai%20bookkeeper%208%20nodes/output_report_spec.md) — Excel 输出格式
-- [onboarding_agent_spec.md](ai%20bookkeeper%208%20nodes/onboarding_agent_spec.md) — 新客户初始化（一次性）
+
+- [data_preprocessing_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/data_preprocessing_agent_spec_v3.md)
+- [confidence_classifier_spec.md](ai%20bookkeeper%208%20nodes/confidence_classifier_spec.md)
+- [je_generator_spec.md](ai%20bookkeeper%208%20nodes/je_generator_spec.md)
+- [coordinator_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/coordinator_agent_spec_v3.md)
+- [review_agent_spec_v3.md](ai%20bookkeeper%208%20nodes/review_agent_spec_v3.md)
+- [output_report_spec.md](ai%20bookkeeper%208%20nodes/output_report_spec.md)
+- [onboarding_agent_spec.md](ai%20bookkeeper%208%20nodes/onboarding_agent_spec.md)
 
 **共享工具**
-- [tools/pattern_standardization_spec.md](tools/pattern_standardization_spec.md) — description 标准化与 Pattern Dictionary
 
-**跨节点约定**
-- [supporting documents/communication_preferences.md](supporting%20documents/communication_preferences.md)
-- [supporting documents/deferred_items.md](supporting%20documents/deferred_items.md) — 所有 deferred 统一在此，禁止散落各 spec
+- [pattern_standardization_spec.md](tools/pattern_standardization_spec.md)
+- [transaction_identity_and_dedup_spec.md](tools/transaction_identity_and_dedup_spec.md)
+
+### 新系统重构草案
+
+- [new_system.md](new%20system/new_system.md) — evidence-first 新系统总纲
+- [different_node.md](new%20system/different_node.md) — 新旧节点差异与替代关系
+
+### 跨节点约定
+
+- [supporting documents/deferred_items.md](supporting%20documents/deferred_items.md)
 - [supporting documents/spec_format.md](supporting%20documents/spec_format.md)
-- [supporting documents/development_workflow.md](supporting%20documents/development_workflow.md) — 开发流程框架（Phase 0-5 + 跨会话一致性规则）
+- [supporting documents/development_workflow.md](supporting%20documents/development_workflow.md)
+- [supporting documents/communication_preferences.md](supporting%20documents/communication_preferences.md)
 
-## Current Focus
+---
 
-- Phase 0 synthetic dry run findings have been fed back into the specs.
-- Remaining focus:
-  - next window's first priority is to discuss the **Onboarding Agent** and decide how its identity-signal / pattern logic should differ from or align with the main workflow
-  - keep the current main-workflow `BUG-001` / `BUG-002` contract as the settled baseline during that discussion
-  - after onboarding is clarified, rerun `synthetic_pack_v1` against the updated specs
-  - confirm the rerun still preserves the intended Section B / review-correction paths
+## Boundary Note
+
+当前仓库存在两套并行设计语境：
+
+- 旧系统 node spec：参考基线与迁移来源
+- 新系统 evidence-first 草案：当前设计收敛目标
+
+在真正开始重写 legacy spec 之前：
+
+- 旧 node spec 仍然保留，但不再默认代表当前任务
+- 新系统 contract 应先在独立文档中收敛清楚
+- 所有动态选择、当前重点、下一步动作，一律以 `AGENTS.md` 和 `TASK_STATE.md` 为准

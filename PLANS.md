@@ -40,12 +40,13 @@
 - Done when real-world issues are clearly distinguished from system-design issues
 
 ## Current status
-- Current phase: Phase 3 executed, Phase 4 in progress
-- Owner: Codex session
-- Last updated: 2026-04-26
-- Immediate next-window priority: begin the Onboarding Agent discussion before the next synthetic rerun
+- Current phase: post-first-dry-run baseline convergence for the evidence-first redesign
+- Last updated: 2026-04-27
+- Immediate planning priority: finish the smallest coherent new-system baseline, then rerun the synthetic pack against it
 
 ## Open questions
-- Should Onboarding share the main-workflow identity-signal contract, adapt it, or keep a deliberately different historical-data path?
-- After those two bug fixes, T03 / T12 should be rerun to confirm Section B and review-correction paths are still actually reachable
+- Which legacy constraints are mandatory to preserve in the new baseline: deterministic gates, audit isolation, governance writes, coordinator/review boundaries, or other pieces?
+- What is the smallest end-to-end new-system path that is coherent enough for the next synthetic rerun?
+- How should the synthetic pack and expected routing map be rewritten to test evidence-first identity, case-memory usage, and governance boundaries instead of legacy pattern-first routing?
+- Once the new baseline stabilizes, what is the right rewrite order for legacy node specs and migration-facing docs?
 - Dry run timeout / retry / partial-result behavior is not yet hardened enough
