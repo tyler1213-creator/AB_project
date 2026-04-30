@@ -69,7 +69,7 @@ tricks.md                  # 临时记录
 
 ### 当前重构方向
 
-- 当前设计工作以 `new system/new_system.md` 为主。
+- 当前设计工作以 `new system/new_system.md` 为唯一 active new-system design source。
 - 旧系统 spec 仍然有价值，但主要作为约束来源、比较对象和未来迁移输入。
 - 当前到底在做什么，一律以 `AGENTS.md` 和 `TASK_STATE.md` 为准。
 
@@ -129,10 +129,11 @@ tricks.md                  # 临时记录
 - [pattern_standardization_spec.md](tools/pattern_standardization_spec.md)
 - [transaction_identity_and_dedup_spec.md](tools/transaction_identity_and_dedup_spec.md)
 
-### 新系统重构草案
+### 新系统重构
 
-- [new_system.md](new%20system/new_system.md) — evidence-first 新系统总纲
-- [different_node.md](new%20system/different_node.md) — 新旧节点差异与替代关系
+- [new_system.md](new%20system/new_system.md) — evidence-first 新系统唯一 active design source
+- [different_node.md](new%20system/different_node.md) — 早期新旧节点差异背景材料；不再作为当前设计入口或后续更新目标
+- [memory_node_design.md](new%20system/memory_node_design.md) — 早期 memory-layer brainstorming 草稿；已合并进 `new_system.md`，不再作为后续更新目标
 
 ### 跨节点约定
 

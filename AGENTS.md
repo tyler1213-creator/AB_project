@@ -9,7 +9,7 @@
 2. Read `PLANS.md` if the task touches system design, dry run, contracts, or multiple specs.
 3. Read `CLAUDE.md` for project overview and core rules.
 4. If touching cross-node behavior, read `supporting documents/development_workflow.md`.
-5. If discussing the current design target, read `new system/new_system.md` and `new system/different_node.md`.
+5. If discussing the current design target, read `new system/new_system.md`.
 6. If borrowing logic from the legacy system, read the relevant old node/tool spec and state explicitly what constraint is being preserved.
 7. If revisiting the legacy onboarding mismatch for comparison or migration planning, read `ai bookkeeper 8 nodes/onboarding_agent_spec.md` and `supporting documents/deferred_items.md`.
 8. If continuing Phase 0 dry-run bug work, read `supporting documents/dry_run_buglist.md`, but do not resume legacy dry-run bug chasing unless it serves the current new-system baseline.
@@ -26,7 +26,9 @@
 - Prefer first-principles reasoning over patching around bad design.
 - Do not add new components unless they solve a concrete problem.
 - For LLM context design, prefer progressive disclosure: keep the stable prompt minimal and let code conditionally load policy/skill packs only when their activation predicates fire.
-- When discussing the current design, default to `new system/new_system.md` and `new system/different_node.md`.
+- When discussing the current design, default to `new system/new_system.md`.
+- Treat `new system/new_system.md` as the only active new-system design source.
+- Do not continue updating `new system/different_node.md` or `new system/memory_node_design.md`; they are retained only as historical background / draft material.
 - Legacy node specs are now reference material for reusable constraints, not the default discussion baseline.
 - If importing a legacy idea, say exactly what is being preserved and why it survives in the new system.
 - Do not silently mix assumptions or file paths between `new system/` and the legacy node specs.
@@ -55,3 +57,8 @@
 - Record only important tradeoffs in `DECISIONS.md`.
 - Keep `PLANS.md` current when phase or success criteria changes.
 - Keep `CLAUDE.md` and `dry_run_buglist.md` trimmed to current reality; remove solved items and stale focus bullets instead of letting historical status accumulate.
+- Treat `AGENTS.md` / `TASK_STATE.md` / `PLANS.md` as the canonical handoff path for new or compacted agent windows.
+- Do not create a separate superpowers handoff document as a replacement for the canonical entry docs.
+- If a long superpowers-driven task needs more execution detail than belongs in `TASK_STATE.md`, create a focused handoff under `docs/superpowers/handoffs/` and add a pointer to it from `TASK_STATE.md`.
+- Use detailed handoff files only for active execution state: current spec or plan, completed tasks, blockers, changed files, verification commands/results, and the next window's first action.
+- Prefer compacting or opening a new window only at natural checkpoints, such as after a spec section converges, a plan task is completed and verified, a review loop closes, or remaining context is low. Do not continue major design decisions in a nearly exhausted context window.

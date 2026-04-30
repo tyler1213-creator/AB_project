@@ -99,6 +99,115 @@
 - 让旧账本简称、银行新写法、receipt 商家名可以在这里桥接
 - 让后面的规则不再直接绑死在脆弱字符串上
 
+#### 3.3.1 实体粒度
+
+`Entity（实体）` 的粒度采用：
+
+`counterparty/vendor/payee + role/context（交易对手/商家/收款人 + 角色/上下文）`
+
+也就是说，实体层回答两个问题：
+
+- 这是谁
+- 它在这个客户关系里扮演什么角色
+
+但实体层不直接回答：
+
+- 应该入哪个 COA 科目
+- 应该采用哪种 HST 处理
+- 这笔交易是否可以自动落账
+
+这些仍然属于 `case memory（案例记忆）`、`rules（规则）`、Node 3 和 accountant governance 的职责。
+
+#### 3.3.2 实体识别状态
+
+运行时的 `entity_resolution_output（实体识别输出）` 必须明确给出 `entity_resolution_status（实体识别状态）`：
+
+- `resolved_entity（已识别实体）`：已安全识别到一个稳定实体。
+- `resolved_entity_with_unconfirmed_role（已识别实体但角色未确认）`：对象已知，但 role/context 尚未被 accountant 确认。
+- `new_entity_candidate（新实体候选）`：系统认为这是新对象，但还不是稳定实体。
+- `ambiguous_entity_candidates（多实体歧义）`：可能对应多个已知实体或角色，不能安全归属。
+- `unresolved（无法识别）`：证据不足，无法判断是谁。
+
+`new_entity_candidate（新实体候选）` 不天然阻断当前交易分类。只要当前证据足够强，Node 3 可以高置信分类本笔交易；但它不能命中 rule，不能未经治理变成稳定实体，也不能自动创建或升级 rule。
+
+`new_entity_candidate（新实体候选）` 可以为当前交易创建候选实体和 case-memory 记录，但这些记录只作为待治理记忆，不能直接获得稳定实体或规则权限。
+
+#### 3.3.3 稳定实体字段
+
+稳定 `Entity（实体）` 采用中等字段集：
+
+- `entity_id（实体唯一标识）`
+- `display_name（展示名称）`
+- `entity_type（实体类型）`
+- `aliases（别名/表面写法）`
+- `roles（角色/上下文）`
+- `status（生命周期状态）`
+- `authority（确认来源与可信级别）`
+- `evidence_links（证据链接）`
+- `risk_flags（风险标记）`
+- `governance_notes（治理备注）`
+- `created_from（创建来源）`
+- `automation_policy（自动化策略）`
+
+实体 contract 不应把 COA 分类、HST 处理、embedding/vector 实现细节、或 tax profile 放进核心字段。实体层只负责“是谁”和“在客户关系里的角色/上下文”，不直接持有会计分类结论。
+
+#### 3.3.4 别名和角色治理
+
+`aliases（别名/表面写法）` 分三种状态：
+
+- `candidate_alias（候选别名）`：可以作为 Node 3 的参考上下文，但不能支持 rule match。
+- `approved_alias（已确认别名）`：可以支持 entity resolution 和 rule match。
+- `rejected_alias（已拒绝别名）`：作为未来识别时的负证据。
+
+`roles（角色/上下文）` 不采用长期三态。稳定实体只保存 accountant 确认过的 role。系统运行时推断出的 `candidate_role（候选角色）` 只放在当前交易的 `entity_resolution_output（实体识别输出）` 中。
+
+Onboarding 可以在受控例外下生成 `accountant_derived_role（来自会计历史数据推导的角色）`，但前提是来源为 accountant 已处理过的历史账本，并且必须保留明确的 authority/source metadata。
+
+#### 3.3.5 状态和自动化策略
+
+`status（生命周期状态）` 只表示实体本身在长期记忆中的状态：
+
+- `candidate（候选实体）`
+- `active（有效实体）`
+- `merged（已合并实体）`
+- `archived（归档实体）`
+
+`active（有效实体）` 不等于可以自动分类。实体是否允许自动化由 `automation_policy（自动化策略）` 控制：
+
+- `eligible（允许自动化）`：允许 rule match，也允许 Node 3 基于 case memory 高置信自动分类。
+- `case_allowed_but_no_promotion（允许案例自动化但禁止规则升级）`：允许 case-based 高置信分类，但不允许进入 rule promotion 候选。
+- `rule_required（需要规则才可自动化）`：只有已批准 rule 可以自动分类；无 rule 时必须 PENDING。
+- `review_required（必须人工复核）`：实体可识别，但每次都需要 accountant 确认。
+- `disabled（禁用自动化）`：不允许任何自动分类路径。
+
+系统可以在 `lint pass（批后体检）` 中自动降级 `automation_policy（自动化策略）`，但升级或放宽必须 accountant 批准。
+
+`rule_required（需要规则才可自动化）` 是当前正式命名；不要再使用早期的 `rule_only（只允许明确规则自动化）`。
+
+实体级 `automation_policy（自动化策略）` 和规则生命周期治理是两条独立权限线：
+
+- 系统可以在 `lint pass（批后体检）` 中自动降低实体自动化权限，例如从 `eligible（允许自动化）` 降到 `case_allowed_but_no_promotion（允许案例自动化但禁止规则升级）` 或 `rule_required（需要规则才可自动化）`。
+- 升级或放宽实体自动化权限必须 accountant 批准。
+- 任何 `rules（规则）` 的创建、升级、修改、删除、降级都必须经过 accountant review and approval。
+- 系统可以把候选项放入 `rule_governance_queue（规则治理队列）`，但不能自行修改 active rule。
+
+#### 3.3.6 实体识别输出 contract
+
+运行时 `entity_resolution_output（实体识别输出）` 采用中等字段集：
+
+- `status（识别状态）`：五种 `entity_resolution_status（实体识别状态）` 之一。
+- `entity_id（实体唯一标识）`：安全识别到稳定实体时填写。
+- `confidence（识别置信度）`：只表示实体识别置信度，不表示会计分类置信度。
+- `reason（识别理由）`：简短说明为什么选择该状态或实体。
+- `matched_alias（命中的别名）`：命中的 alias 或当前证据表面文本。
+- `alias_status（别名状态）`：`candidate_alias（候选别名）`、`approved_alias（已确认别名）`、或 `rejected_alias（已拒绝别名）`。
+- `candidate_role（候选角色）`：当前交易的系统推断角色，不经 accountant 确认不得写入稳定实体角色。
+- `evidence_used（使用的证据）`：用于识别的证据来源，例如 raw description、receipt vendor、cheque payee、historical ledger name、或 accountant context。
+- `blocking_reason（阻断原因）`：如果该识别结果不能支持确定性自动化，说明阻断原因。
+- `candidate_entities（候选实体列表）`：在 ambiguous 或 unresolved 场景下列出可能实体。
+
+这个输出 contract 不暴露 embedding/vector 命中、raw model prompt trace、或全部 rejected candidates 等实现细节。
+
 ### 3.4 `case memory（案例记忆层）`
 
 这层替代旧系统的 `Observations（观察记录）` 主角色。
@@ -146,6 +255,17 @@
 - 仍然由 accountant 掌握高 authority 写入口
 
 变的是它绑定的对象更稳了，不再过度依赖单一字符串。
+
+Rule match 的前置条件也因此改变。新系统中，只有同时满足以下条件时，交易才可以进入 rule match：
+
+- `entity.status（实体生命周期状态） = active（有效实体）`
+- `matched_alias（命中的别名） = approved_alias（已确认别名）`
+- rule 要求的 role/context 已确认并满足
+- `automation_policy（自动化策略）` 允许 rule-based automation
+- 存在适用的 active rule
+- 当前交易满足 rule 自身的 `direction（方向）`、`amount_range（金额范围）` 和其他已批准条件
+
+`lint warning（批后体检警告）` 或近期 `intervention（人工干预）` 不应作为 rule match 里的临时额外判断。它们应通过治理流程改变 `automation_policy（自动化策略）` 或 rule 状态，从而影响未来匹配。
 
 ### 3.6 `transaction log（交易审计日志）`
 
@@ -434,6 +554,49 @@
 
 所以 `Intervention Log（人工干预日志）` 不再只是归档，它会变成系统治理的输入之一。
 
+实体治理必须写入 `entity_governance_event（实体治理事件）`。
+
+`event_id（治理事件唯一标识）` 是单次治理动作的主键；`entity_id（实体唯一标识）` 是重要查询索引，但不能替代 event_id。原因是同一实体会有多次治理动作，而一次治理动作也可能影响多个实体。
+
+典型事件包括：
+
+- `approve_alias（批准别名）`
+- `reject_alias（拒绝别名）`
+- `confirm_role（确认角色）`
+- `merge_entity（合并实体）`
+- `split_entity（拆分实体）`
+- `change_automation_policy（修改自动化策略）`
+
+治理事件的最小字段集包括：
+
+- `event_id（治理事件唯一标识）`
+- `event_type（治理事件类型）`
+- `entity_ids（相关实体 ID 列表）`
+- `affected_aliases（受影响别名）`
+- `affected_roles（受影响角色）`
+- `old_value（修改前值）`
+- `new_value（修改后值）`
+- `source（来源）`，例如 `lint_pass（批后体检）`、`review_agent（审核代理）`、`accountant_instruction（会计指令）`、`onboarding（初始化）`
+- `requires_accountant_approval（是否需要会计批准）`
+- `approval_status（批准状态）`：`pending（待批准）`、`approved（已批准）`、`rejected（已拒绝）`、`auto_applied_downgrade（自动降级已生效）`
+- `accountant_id（会计标识）`
+- `reason（原因说明）`
+- `evidence_links（证据链接）`
+- `created_at（创建时间）`
+- `resolved_at（处理完成时间）`
+
+`entity merge/split（实体合并/拆分）` 只能由治理流程执行。运行时最多生成 `merge_candidate（合并候选）` 或 `split_candidate（拆分候选）`。合并时旧 `entity_id` 不删除，而是改为 `merged（已合并实体）` 并指向 `merged_into_entity_id（合并目标实体 ID）`。拆分时新对象获得新的 `entity_id`，历史 cases 不自动全量迁移，只迁移 accountant 明确确认的案例。
+
+Active rules 和 approved aliases 不会自动跟随 merge/split 生效，必须进入治理队列由 accountant 确认。Transaction Log 不重写历史实体引用，后续解释通过 governance event 完成。
+
+治理事件规则：
+
+- 所有长期 entity-memory mutation 都必须写入事件。
+- 事件必须能按 `event_id（治理事件唯一标识）`、`entity_id（实体唯一标识）`、`approval_status（批准状态）`、`event_type（治理事件类型）` 查询；如果事件关联具体 transaction/case，也应能按对应引用查询。
+- 系统自动降级 `automation_policy（自动化策略）` 可以立即生效，但必须记录为 `auto_applied_downgrade（自动降级已生效）` 并展示给 Review Agent。
+- 需要 accountant approval 的事件，在批准前不得改变长期 entity memory。
+- Review Agent 应按业务含义和事件类型聚合展示治理事件，不应直接把原始事件字段倾倒给 accountant。
+
 ---
 
 ## 8. 这套系统中哪些东西仍然保持不变
@@ -471,5 +634,5 @@
 也就是说，在你明确决定迁移之前：
 
 - 旧 node spec 继续保持原状
-- 新系统内容统一以这份文档和 `different_node.md` 为准
-
+- 新系统内容统一以这份 `new_system.md` 为准
+- `different_node.md` 和 `memory_node_design.md` 停止作为 active design source，只保留为历史背景/草稿材料，不再要求后续更新

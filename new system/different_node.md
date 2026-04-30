@@ -1,5 +1,10 @@
 # 新旧节点差异
 
+> 已停止作为 active design source。
+>
+> 本文件仅保留为早期背景材料，用于理解最初的新旧系统差异。当前新系统设计统一以
+> `new system/new_system.md` 为准。后续收敛新系统 contract 时不要继续更新本文件。
+
 ## 1. 这份文档的定位
 
 这份文档只回答一个问题：
@@ -45,6 +50,8 @@
 - 核心记忆位置让给 `entity memory（实体记忆）`
 - 它不再是 identity（身份识别） 主存储
 - 它最多只保留为 exact alias（精确别名） 命中缓存
+- 只有 `approved_alias（已确认别名）` 可以支持确定性 rule match（规则命中）
+- `candidate_alias（候选别名）` 只能作为 Node 3 的参考上下文，不能触发规则自动化
 
 因此失去作用的旧规则：
 
@@ -67,6 +74,8 @@
 - 预处理仍然负责解析、配对、结构标准化和 `transaction_id（交易永久标识）`
 - 但“生成 `description（标准描述）`”不再是它最核心的职责
 - 更重要的动作变成“整理证据，交给实体识别层”
+- `description（标准描述）` 和 `pattern_source（模式来源）` 不再决定长期学习入口
+- 运行时应产出 `entity_resolution_output（实体识别输出）`，说明实体识别状态、命中别名、候选角色、使用证据和阻断原因
 
 因此失去作用的旧规则：
 
@@ -137,6 +146,7 @@
 - 规则仍然保留确定性地位
 - 但它绑定的核心对象从 `pattern（标准描述字符串）` 转向 `entity（实体）`
 - 未来允许少量、显式、受控的 conditional rule（条件规则）
+- rule match（规则命中）必须同时满足：实体为 `active（有效实体）`、命中 `approved_alias（已确认别名）`、所需 role/context 已确认、`automation_policy（自动化策略）` 允许、存在 active rule、交易满足 rule 条件
 
 因此失去作用的旧规则：
 
@@ -160,6 +170,8 @@
 - Node 3 的主要历史输入变成 `evidence pack（证据包）`
 - 证据包包含实体、历史案例、已知风险、当前证据强弱
 - 它不再以 observation row（单条观察记录） 为唯一入口
+- 当 `entity_resolution_status（实体识别状态） = new_entity_candidate（新实体候选）` 且当前证据足够强时，Node 3 仍可高置信分类本笔交易
+- 但新实体候选不能命中 rule，也不能未经治理变成稳定实体或创建 rule
 
 因此失去作用的旧规则：
 
@@ -203,6 +215,8 @@
 
 - 它的治理对象从 pattern（标准描述） 转向 entity（实体）
 - 更重要的动作会变成 merge entity（合并实体）、split entity（拆分实体）、approve alias（批准别名）、治理 rule health（规则健康）
+- entity merge/split（实体合并/拆分） 只能由 Review / Governance 流程执行，runtime 只能生成候选
+- 所有长期 entity memory 变更都应写入 `entity_governance_event（实体治理事件）`
 
 因此失去作用的旧规则：
 
@@ -247,6 +261,7 @@
 
 - `Transaction Log（交易审计日志）` 里的 `description（标准描述）` 和 `pattern_source（模式来源）` 会下降为次级字段
 - 更重要的运行时身份会转向 `entity（实体）`
+- Transaction Log 不应在 entity merge/split 后重写历史 entity 引用；后续解释应通过 `entity_governance_event（实体治理事件）` 追溯
 
 ---
 
@@ -265,4 +280,3 @@
 → `entity（实体）`  
 → `case memory（案例记忆）`  
 → `selective rule（选择性规则化）`
-

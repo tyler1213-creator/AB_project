@@ -41,8 +41,8 @@
 
 ## Current status
 - Current phase: post-first-dry-run baseline convergence for the evidence-first redesign
-- Last updated: 2026-04-27
-- Immediate planning priority: finish the smallest coherent new-system baseline, then rerun the synthetic pack against it
+- Last updated: 2026-04-30
+- Immediate planning priority: finish the smallest coherent new-system baseline directly in `new system/new_system.md`, then rerun the synthetic pack against it
 
 ## Open questions
 - Which legacy constraints are mandatory to preserve in the new baseline: deterministic gates, audit isolation, governance writes, coordinator/review boundaries, or other pieces?

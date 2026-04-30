@@ -246,3 +246,65 @@ Tradeoff:
 - entry docs must now say more clearly that old specs are reference material while `new system/` is the current design target
 - dry-run work is temporarily delayed until the new baseline is coherent enough to test end-to-end
 - migration order for rewriting legacy specs is still deferred until after that new-baseline dry run
+
+## 2026-04-29
+
+### Chose entity memory as counterparty/vendor/payee plus confirmed role/context
+Reason:
+- the new system needs to distinguish ambiguous names and different client relationships without turning entity identity into accounting classification
+- runtime role guesses are too close to business judgment to persist as stable memory without accountant confirmation
+- onboarding may still preserve accountant-derived historical role signals when the source is accountant-prepared books and authority metadata is explicit
+
+Tradeoff:
+- more transactions may require role confirmation before deterministic automation
+- entity resolution must carry candidate-role context separately from the long-term entity record
+
+### Separated entity lifecycle status from automation policy
+Reason:
+- `active` should mean a usable long-term entity, not automatic permission to classify
+- automation eligibility depends on aliases, roles, rules, case history, and governance risk, so it needs a separate policy field
+
+Tradeoff:
+- the entity contract has one more dimension to manage
+- rule matching must check both lifecycle state and automation policy rather than reading one status field
+
+### Let lint pass downgrade entity automation while keeping upgrades accountant-approved
+Reason:
+- automatic downgrades reduce risk after bad outcomes or repeated interventions
+- upgrades expand automation authority, so they should require accountant approval
+- entity automation policy is separate from active rule lifecycle
+
+Tradeoff:
+- lint pass must produce auditable downgrade reasons
+- accountant review still needs to handle policy upgrades and contested downgrades
+
+### Kept active rule changes under accountant approval
+Reason:
+- rules are deterministic execution authority, so creation, promotion, modification, deletion, and downgrade must remain accountant-governed
+- the system can detect candidates and risks, but should not silently change active deterministic behavior
+
+Tradeoff:
+- rule governance requires review workflow support
+- automation gains from case memory and entity memory must be staged through review before becoming deterministic rules
+
+### Made entity merge and split governance-only operations
+Reason:
+- merge and split change long-term memory identity and can affect cases, aliases, rules, and audit interpretation
+- runtime can detect candidates, but direct automatic mutation would make the audit chain unstable
+- Transaction Log should keep historical references and rely on governance events for later interpretation
+
+Tradeoff:
+- Review Agent must support entity-governance workflows before the memory layer is fully maintainable
+- some duplicate or over-broad entities may persist until accountant review resolves them
+
+## 2026-04-30
+
+### Consolidated new-system design authority into `new_system.md`
+Reason:
+- `new_system.md`, `different_node.md`, and `memory_node_design.md` had started duplicating the same memory-layer contract
+- duplicated active specs make future windows prone to drift and partial updates
+- keeping one active new-system design source is safer for contract convergence before the next synthetic dry run
+
+Tradeoff:
+- `new_system.md` becomes longer and must carry both baseline narrative and key contract details
+- `different_node.md` and `memory_node_design.md` remain useful historical context, but they are no longer maintained as active specs
