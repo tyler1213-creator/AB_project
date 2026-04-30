@@ -1,52 +1,100 @@
 # PLANS.md
 
-## Objective
-- Use Phase 0 dry runs to improve system design and contract clarity so later coding is smoother and lower-risk.
-- Prioritize design validation over demo quality.
+## Document Role
 
-## Non-goals
-- No production code implementation in this phase.
-- No OCR/parser quality optimization as the main goal.
-- No attempt to maximize automation rate on incomplete real client data.
-- No premature productization of the dry run harness.
+`PLANS.md` owns the project phase model and high-level planning questions.
 
-## Phases
+It does not own current execution state, handoff detail, accepted design tradeoffs, agent entry rules, stable project charter, or system design content. Those responsibilities belong to:
 
-### Phase 1: Contract and spec alignment
-- unify transaction record contract
-- settle transaction identity / dedupe design
-- update cross-node specs for amount, bank_account, pattern_source, fallback behavior
-- Done when core shared contracts are reflected consistently across specs
+- `TASK_STATE.md` — current execution state, active risks, and next step
+- `DECISIONS.md` — important accepted tradeoffs
+- `AGENTS.md` — agent entry rules and current reading order
+- `CLAUDE.md` — stable project charter
+- `new system/new_system.md` — current active system design baseline
 
-### Phase 2: Synthetic dry run harness design
-- define synthetic-first Phase 0 approach
-- prepare synthetic pack, routing expectations, and accountant simulation
-- tighten workflow orchestrator assumptions
-- Done when a full synthetic pack can be used to test system design end-to-end
+## Planning Objective
 
-### Phase 3: Execute synthetic dry run
-- run the synthetic pack through the workflow
-- compare actual routing with expected routing
-- record design bugs, interface mismatches, schema gaps, and state-flow issues
-- Done when findings are concrete enough to drive spec updates
+Move the repo from design convergence to implementation readiness without creating source-of-truth ambiguity.
 
-### Phase 4: Feed findings back into specs
-- revise specs based on synthetic dry run findings
-- separate true design bugs from real-world input problems
-- Done when Phase 0 produces an implementation-ready blueprint
+The near-term planning goal is to stabilize the new-system baseline enough that synthetic validation can test the current design instead of reopening legacy routing questions by default.
 
-### Phase 5: Real-world dry run
-- use real statements to test ingestion noise, missing context, and practical blockers
-- Done when real-world issues are clearly distinguished from system-design issues
+## Non-Goals
 
-## Current status
-- Current phase: post-first-dry-run baseline convergence for the evidence-first redesign
-- Last updated: 2026-04-30
-- Immediate planning priority: finish the smallest coherent new-system baseline directly in `new system/new_system.md`, then rerun the synthetic pack against it
+- Do not redesign product logic in this planning document.
+- Do not use this file as a handoff log.
+- Do not add low-level field design questions here.
+- Do not add implementation task briefs before contracts are frozen.
+- Do not treat OCR/parser quality or real-world ingestion noise as the next design-validation target.
 
-## Open questions
-- Which legacy constraints are mandatory to preserve in the new baseline: deterministic gates, audit isolation, governance writes, coordinator/review boundaries, or other pieces?
-- What is the smallest end-to-end new-system path that is coherent enough for the next synthetic rerun?
-- How should the synthetic pack and expected routing map be rewritten to test evidence-first identity, case-memory usage, and governance boundaries instead of legacy pattern-first routing?
-- Once the new baseline stabilizes, what is the right rewrite order for legacy node specs and migration-facing docs?
-- Dry run timeout / retry / partial-result behavior is not yet hardened enough
+## Phase Model
+
+### Phase 1: Design Stabilization
+
+Purpose:  
+Converge the active design baseline and remove source-of-truth ambiguity.
+
+Exit gate:  
+The current active baseline is coherent enough for synthetic validation.
+
+Before this phase exits, the repo should make clear:
+
+- which legacy constraints must be preserved in the new baseline
+- what the synthetic pack remap target is
+- how expected behavior and routing expectations should be rewritten for the new baseline
+- that no unresolved source-of-truth conflict remains among canonical docs
+
+### Phase 2: Synthetic Baseline Validation
+
+Purpose:  
+Remap the synthetic pack and expected behavior to the new-system baseline, then run a synthetic dry run to expose design, interface, and state-flow problems.
+
+Exit gate:  
+Synthetic findings are concrete and categorized as design bugs, contract gaps, or deferred issues.
+
+### Phase 3: Contract Freeze
+
+Purpose:  
+Turn validated shared data structures and behavior expectations into implementation-facing contracts.
+
+Exit gate:  
+Core contracts are stable enough that implementation agents can work without inventing fields or behavior.
+
+### Phase 4: Implementation Foundation
+
+Purpose:  
+Implement shared schemas, deterministic tools, storage foundations, and test scaffolding.
+
+Exit gate:  
+Foundation components pass tests and match frozen contracts.
+
+### Phase 5: Pipeline Implementation
+
+Purpose:  
+Implement processing workflow components against the frozen contracts.
+
+Exit gate:  
+Pipeline can run end-to-end on synthetic baseline cases.
+
+### Phase 6: Integration and Real-World Validation
+
+Purpose:  
+Use real-world data to separate ingestion, OCR, and parser noise from system design issues.
+
+Exit gate:  
+Real-world blockers are categorized and the system is ready for product hardening.
+
+## Current Roadmap Position
+
+The repo is currently in Phase 1: Design Stabilization, specifically new-system baseline convergence.
+
+A synthetic dry run has already been executed against the legacy pattern-first baseline. The next meaningful synthetic dry run should target the new-system baseline after the baseline is coherent enough to validate.
+
+`TASK_STATE.md` remains the source of truth for the current objective, current risks, and immediate next step.
+
+## Open Planning Questions
+
+- What is the smallest coherent new-system baseline for the next synthetic dry run?
+- Which legacy constraints must be preserved in the new baseline?
+- How should the synthetic pack and expected behavior be remapped to the new baseline?
+- What needs to be contract-frozen before implementation can begin?
+- What rewrite or migration order best prevents source-of-truth conflicts after the new baseline stabilizes?
