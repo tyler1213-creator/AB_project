@@ -1,64 +1,153 @@
 # AGENTS.md
 
-## Mission
+## Purpose
+
+This is the agent operating entrypoint for the repo.
+
+It defines:
+
+- document authority order
+- required reading by task type
+- editable vs. reference-only scope
+- when to stop, escalate, or defer
+- required handoff / summary discipline
+
+It does not own product design, current task status, phase planning, or historical decision rationale.
+
+## Authority Order
+
+When documents disagree, resolve them in this order:
+
+1. explicit user instruction
+2. `AGENTS.md`
+3. `TASK_STATE.md`
+4. `PLANS.md`
+5. `CLAUDE.md`
+6. active product spec for the task
+7. historical reference material
+
+Each document is authoritative only within its owning responsibility:
+
+- `AGENTS.md` owns agent operating rules, document precedence, stop/escalate conditions, and output discipline.
+- `TASK_STATE.md` owns the live handoff: current status, active objective, next step, and active risks.
+- `PLANS.md` owns the phase model, exit criteria, and planning questions.
+- `CLAUDE.md` owns stable project charter, durable principles, and long-lived constraints.
+- The active product spec owns current product design content and business-spec substance for the task.
+- Historical reference material only informs preserved constraints or migration context; it is not the default design authority.
+
+Product-spec authority for current design discussion:
+
+- `new system/new_system.md` is the only active new-system design source.
+- `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts and should not continue to be updated.
+- Legacy node specs are reusable constraints / reference material, not the default baseline.
+
+If a legacy spec is used, state explicitly what constraint is being preserved and why it still survives in the new system.
+
+## Required Reading
+
+Read these before substantial work:
+
+1. `TASK_STATE.md`
+2. `CLAUDE.md`
+
+Read `supporting documents/communication_preferences.md` before substantial user-facing analysis, review, or document writing.
+
+Read `PLANS.md` when the task touches:
+
+- system design
+- dry run planning
+- contracts
+- phase changes
+- multi-spec coordination
+
+Read `supporting documents/development_workflow.md` when the task touches:
+
+- workflow discipline
+- dry run method
+- phase transitions
+- cross-node coordination
+
+Treat `supporting documents/development_workflow.md` as durable workflow method only. If phase labels or current phase status conflict with `PLANS.md`, `PLANS.md` owns the current phase model and exit criteria.
+
+Read `new system/new_system.md` when the task touches the current design target.
+
+Read relevant legacy specs only when:
+
+- preserving a reusable constraint
+- comparing architectures
+- defining migration order
+
+Additional targeted reads:
+
+- `ai bookkeeper 8 nodes/onboarding_agent_spec.md` and `supporting documents/deferred_items.md` for legacy onboarding comparison or migration planning
+- `supporting documents/dry_run_buglist.md` only when Phase 0 dry-run findings are directly relevant to the current new-system baseline
+
+## Editable Scope
+
+Default editable governance / handoff docs:
+
+- `AGENTS.md`
+- `TASK_STATE.md`
+- `PLANS.md`
+- `DECISIONS.md`
+- `supporting documents/communication_preferences.md`
+- `supporting documents/development_workflow.md`
+- focused governance references under `supporting documents/` when genuinely needed
+
+`CLAUDE.md` is editable only when the stable charter, durable principles, or long-lived constraints actually change.
+
+Default reference-only docs unless the task explicitly requires otherwise:
+
+- `new system/different_node.md`
+- `new system/memory_node_design.md`
+- legacy node specs under `ai bookkeeper 8 nodes/`
+- product specs outside the task scope
+
+Do not silently mix assumptions, terminology, or file paths between the active new-system spec and legacy specs.
+
+## Operating Rules
+
 - Keep changes safe, minimal, and spec-consistent.
-- In this repo, the primary goal is to improve system design before implementation.
-
-## Before coding
-1. Read `TASK_STATE.md` for current objective and real status.
-2. Read `PLANS.md` if the task touches system design, dry run, contracts, or multiple specs.
-3. Read `CLAUDE.md` for project overview and core rules.
-4. If touching cross-node behavior, read `supporting documents/development_workflow.md`.
-5. If discussing the current design target, read `new system/new_system.md`.
-6. If borrowing logic from the legacy system, read the relevant old node/tool spec and state explicitly what constraint is being preserved.
-7. If revisiting the legacy onboarding mismatch for comparison or migration planning, read `ai bookkeeper 8 nodes/onboarding_agent_spec.md` and `supporting documents/deferred_items.md`.
-8. If continuing Phase 0 dry-run bug work, read `supporting documents/dry_run_buglist.md`, but do not resume legacy dry-run bug chasing unless it serves the current new-system baseline.
-
-## Current handoff focus
-- Main-workflow handling for `BUG-001` / `BUG-002` in the legacy design is no longer the active work target; treat it as already-mined reference material.
-- The current task is to converge the evidence-first redesign in `new system/` into the repo's next working baseline.
-- Pull forward valuable hard-boundary logic from the legacy specs, but do not rewrite those old node specs yet unless migration order is explicitly being defined.
-- Do not spend the next window on another standalone legacy onboarding fix or another legacy main-workflow pass unless the user explicitly asks for that.
-- After the new-system contract is coherent end-to-end, the next major step is a synthetic dry run against that new baseline.
-
-## Rules
-- This repo is still spec-first; do not treat docs as optional.
-- Prefer first-principles reasoning over patching around bad design.
-- Do not add new components unless they solve a concrete problem.
-- For LLM context design, prefer progressive disclosure: keep the stable prompt minimal and let code conditionally load policy/skill packs only when their activation predicates fire.
-- When discussing the current design, default to `new system/new_system.md`.
-- Treat `new system/new_system.md` as the only active new-system design source.
-- Do not continue updating `new system/different_node.md` or `new system/memory_node_design.md`; they are retained only as historical background / draft material.
-- Legacy node specs are now reference material for reusable constraints, not the default discussion baseline.
-- If importing a legacy idea, say exactly what is being preserved and why it survives in the new system.
-- Do not silently mix assumptions or file paths between `new system/` and the legacy node specs.
-- Keep all contract decisions consistent across related specs.
+- This repo is spec-first; docs are not optional.
+- Improve system design before implementation.
+- Prefer first-principles reasoning over local patching.
+- Do not add components unless they solve a concrete problem.
 - Do not change public data contracts casually.
-- If a change affects multiple nodes, update upstream/downstream specs together.
-- Keep `dry_run_buglist.md` only for real design/interface bugs, not generic notes.
-- Synthetic dry run is for system-design validation, not OCR/parser evaluation.
-- The next synthetic dry run should validate the new-system baseline, not reopen already-settled legacy routing questions unless they expose a reusable constraint.
+- If a change affects upstream/downstream interfaces, update the related governing docs together.
+- For LLM context design, prefer progressive disclosure: keep the stable prompt minimal and load policy or skill packs only when activation predicates fire.
 
-## Communication preferences
-- I do not need agreement. I need valuable, objective, and correct responses.
-- I strongly dislike patch-style fixes. Do not propose patching unless it is truly unavoidable.
-- Approach every problem from first principles. You may question any existing design.
+## Stop / Escalate
 
-## Validation
-- For spec work: check cross-doc consistency manually.
-- For dry run work: compare actual routing against `expected_routing_map.md`.
-- If changing dry run design, verify it still serves Phase 0 goals in `development_workflow.md`.
+Stop and ask the user before proceeding if:
 
-## Output requirements
-- In the final summary include: files changed, why, validation done, remaining risks / follow-ups.
+- the requested change would alter product design contracts or business-spec substance
+- two authority sources conflict and the conflict cannot be resolved by the authority order above
+- the task would require rewriting legacy specs as if they were the active baseline
+- the change would blur historical vs. active design sources
 
-## Long-task protocol
-- Update `TASK_STATE.md` after any meaningful design move.
-- Record only important tradeoffs in `DECISIONS.md`.
-- Keep `PLANS.md` current when phase or success criteria changes.
-- Keep `CLAUDE.md` and `dry_run_buglist.md` trimmed to current reality; remove solved items and stale focus bullets instead of letting historical status accumulate.
-- Treat `AGENTS.md` / `TASK_STATE.md` / `PLANS.md` as the canonical handoff path for new or compacted agent windows.
-- Do not create a separate superpowers handoff document as a replacement for the canonical entry docs.
-- If a long superpowers-driven task needs more execution detail than belongs in `TASK_STATE.md`, create a focused handoff under `docs/superpowers/handoffs/` and add a pointer to it from `TASK_STATE.md`.
-- Use detailed handoff files only for active execution state: current spec or plan, completed tasks, blockers, changed files, verification commands/results, and the next window's first action.
-- Prefer compacting or opening a new window only at natural checkpoints, such as after a spec section converges, a plan task is completed and verified, a review loop closes, or remaining context is low. Do not continue major design decisions in a nearly exhausted context window.
+Defer rather than forcing closure when:
+
+- the current baseline needs a real design decision, not wording cleanup
+- a legacy idea cannot be translated cleanly into the new-system baseline
+- synthetic dry-run work would resume before the new baseline is coherent enough to validate
+
+## Document Update Discipline
+
+- Update `TASK_STATE.md` after any meaningful movement in current status, next action, or active risks.
+- Update `PLANS.md` when phase model, gates, or success criteria change.
+- Append important accepted tradeoffs to `DECISIONS.md`; do not rewrite history into fake authority.
+- Keep `CLAUDE.md` stable and low-churn.
+- Keep `AGENTS.md` focused on agent operation only, not temporary handoff detail.
+- Keep `supporting documents/development_workflow.md` durable; do not turn it into the current task brief.
+- Preserve meaningful historical design information by reframing or referencing it, not by silently deleting it.
+
+## Output Requirements
+
+Final summaries must include:
+
+- files changed
+- why
+- validation done
+- remaining risks / follow-ups
+
+If validation is intentionally not run, say so plainly.

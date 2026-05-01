@@ -2,73 +2,61 @@
 
 ## Document Role
 
-`TASK_STATE.md` records the current execution state only.
+`TASK_STATE.md` records the live handoff only:
 
-It does not own the phase model, accepted design tradeoffs, agent entry rules, stable project charter, or detailed system design.
+- current status
+- active objective
+- next step
+- active risks
 
-- `PLANS.md` owns project phases and gates.
-- `DECISIONS.md` owns accepted tradeoffs.
-- `AGENTS.md` owns agent entry rules.
-- `CLAUDE.md` owns stable project charter.
-- `new system/new_system.md` owns the active system design baseline.
+It does not own phase policy, stable charter, or historical decision rationale.
 
-## Current Phase
+## Current Status
 
-Phase 1: Design Stabilization
+Current phase position:
 
-Current sub-focus:  
-New-system baseline convergence.
+- Phase 1: Design Stabilization
+- Current workstream: new-system baseline convergence
 
-## Current Objective
+Current governance baseline:
+
+- Governance docs define clearer boundaries between agent operating rules, live handoff, phase planning, stable charter, workflow method, and communication preferences.
+- This governance cleanup did not change product design contracts or business-spec substance.
+
+Implementation has not started.
+
+## Active Objective
 
 Converge the evidence-first redesign into the repo's next working baseline, then prepare the next synthetic dry run against that new baseline.
 
 ## Active Baseline
 
-Active design source:
+- `new system/new_system.md` is the only active new-system design source.
+- `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts and should not continue to be updated.
+- Legacy node specs are reusable constraints / reference material, not the default baseline.
 
-- `new system/new_system.md`
+## Immediate Next Step
 
-Reference / historical sources:
+Resolve the remaining Case Memory contract questions as the likely starting point for baseline convergence, then define the smallest coherent end-to-end target for the next synthetic dry run.
 
-- `ai bookkeeper 8 nodes/` - legacy node specs; reference and migration source only
-- `new system/different_node.md` - historical draft / background
-- `new system/memory_node_design.md` - historical draft / background
-- previous dry-run artifacts - historical evidence, not current baseline
-
-Implementation has not started.
-
-## Current Focus
-
-Continue baseline convergence in `new system/new_system.md`, especially unresolved boundaries that must be coherent before the next synthetic dry run.
-
-The immediate design focus should remain high-level contract coherence, not low-level product-field expansion.
-
-## Active Blockers / Risks
+## Active Risks
 
 - case-memory authority is not fully settled
 - runtime evidence-pack handoff is not fully settled
 - rule promotion / governance boundaries are not fully settled
 - synthetic pack and expected behavior have not yet been remapped to the new baseline
 - timeout / retry / partial-result behavior remains underdesigned
-- legacy constraints may be imported into the new system without explicit translation
+- legacy constraints may be imported without explicit translation into the new-system baseline
 
-## Immediate Next Action
-
-Continue new-system baseline convergence, starting with the unresolved Case Memory contract.
-
-Then define the smallest coherent end-to-end baseline for the next synthetic dry run.
-
-## Do Not Do Next
+## Current Do-Not-Do List
 
 - do not resume legacy `BUG-001` / `BUG-002` chasing as the main task
 - do not rerun the old legacy synthetic dry run
-- do not rewrite legacy node specs unless migration order is explicitly being handled
+- do not rewrite legacy node specs unless migration order is explicitly being defined
 - do not start implementation
 - do not treat historical drafts as active design sources
 
-## Last Meaningful Checkpoint
+## Latest Meaningful Checkpoint
 
-- `new system/new_system.md` is the only active new-system design source
-- `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts
-- `PLANS.md` now owns the unified phase model
+- Governance docs now separate operating rules, stable charter, live status, phase planning, workflow method, and communication preferences more explicitly.
+- The next major project step remains: converge the new-system baseline and prepare a new synthetic dry run.
