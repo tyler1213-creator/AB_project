@@ -1,8 +1,11 @@
-# Phase 0 Dry Run — Active Bug List
+# Phase 0 Dry Run — Historical Finding List
+
+> Status note: This file is historical Phase 0 dry-run finding material. It is not the authority for the current task baseline.
+> `BUG-001` and `BUG-002` must not be resumed as the main workstream unless the user explicitly requests that work, or they are being consulted for legacy constraint extraction or migration planning.
 
 ---
 
-只保留**当前仍未解决**、且仍影响系统设计 / 接口契约的真实问题。
+本文件保留 Phase 0 dry-run 中尚有参考价值的设计 / 接口发现，用于 legacy constraint extraction 或 migration planning。
 
 已解决并从本清单移除的历史项：
 
