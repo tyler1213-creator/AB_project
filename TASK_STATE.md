@@ -1,43 +1,74 @@
 # TASK_STATE.md
 
-## Current objective
+## Document Role
 
-- Converge the evidence-first redesign into the repo's next working baseline by integrating the legacy system's reusable hard-boundary logic, then run the next synthetic dry run against that new baseline.
+`TASK_STATE.md` records the current execution state only.
 
-## Completed
+It does not own the phase model, accepted design tradeoffs, agent entry rules, stable project charter, or detailed system design.
 
-- settled the current main-workflow direction for `description` / `pattern_source` / cheque payee handling
-- aligned Node 1 / Node 3 / Coordinator / Review / Transaction Log around the current `BUG-001` / `BUG-002` baseline
-- documented transaction identity / dedupe as a separate shared tool contract
-- executed a synthetic dry run and wrote key findings back into the relevant specs
-- documented the separate evidence-first redesign in:
-  - `new system/new_system.md`
-  - `new system/different_node.md`
-- completed the first memory-layer brainstorming section for `Entity Memory / Entity Resolution` in `new system/memory_node_design.md`
-- consolidated the accepted memory-layer details into `new system/new_system.md` and made it the only active new-system design source
-- moved dynamic working entry responsibility to `AGENTS.md` and reduced `CLAUDE.md` to a stable charter
+- `PLANS.md` owns project phases and gates.
+- `DECISIONS.md` owns accepted tradeoffs.
+- `AGENTS.md` owns agent entry rules.
+- `CLAUDE.md` owns stable project charter.
+- `new system/new_system.md` owns the active system design baseline.
 
-## Current state
+## Current Phase
 
-- repo is still design/spec only; implementation has not started
-- `new system/new_system.md` is now the only active new-system design source for ongoing discussion and contract convergence
-- `new system/different_node.md` and `new system/memory_node_design.md` are retained only as historical background / draft material and should not receive further updates
-- legacy node specs remain unchanged, but should now be read as reference sources for reusable constraints and migration planning
-- the legacy onboarding mismatch is no longer the main task; it is only relevant when deciding what should be preserved or discarded in the new baseline
-- one synthetic dry run has already been executed on the legacy pattern-first baseline
-- no synthetic rerun has yet been executed against the new-system baseline
+Phase 1: Design Stabilization
 
-## Active risks
+Current sub-focus:  
+New-system baseline convergence.
 
-- the evidence-first redesign still has unresolved boundaries around case-memory authority, runtime evidence-pack handoff, rule promotion, and cross-spec migration
-- legacy concepts may still get imported into the new system without an explicit translation of why they survive
-- the synthetic pack and expected routing map have not yet been rewritten for the new baseline
-- timeout / retry / partial-result behavior is still underdesigned
+## Current Objective
 
-## Next step
+Converge the evidence-first redesign into the repo's next working baseline, then prepare the next synthetic dry run against that new baseline.
 
-- continue new-system convergence directly in `new system/new_system.md`, starting with the unresolved `Case Memory` contract
-- keep refining the new-system contract and state explicitly which legacy constraints are being preserved
-- define the smallest end-to-end baseline that is coherent enough for a new synthetic dry run
-- remap the synthetic pack and expected routing to that new baseline
-- run the next synthetic dry run against the new-system baseline, then use its findings to decide spec rewrite and migration order
+## Active Baseline
+
+Active design source:
+
+- `new system/new_system.md`
+
+Reference / historical sources:
+
+- `ai bookkeeper 8 nodes/` - legacy node specs; reference and migration source only
+- `new system/different_node.md` - historical draft / background
+- `new system/memory_node_design.md` - historical draft / background
+- previous dry-run artifacts - historical evidence, not current baseline
+
+Implementation has not started.
+
+## Current Focus
+
+Continue baseline convergence in `new system/new_system.md`, especially unresolved boundaries that must be coherent before the next synthetic dry run.
+
+The immediate design focus should remain high-level contract coherence, not low-level product-field expansion.
+
+## Active Blockers / Risks
+
+- case-memory authority is not fully settled
+- runtime evidence-pack handoff is not fully settled
+- rule promotion / governance boundaries are not fully settled
+- synthetic pack and expected behavior have not yet been remapped to the new baseline
+- timeout / retry / partial-result behavior remains underdesigned
+- legacy constraints may be imported into the new system without explicit translation
+
+## Immediate Next Action
+
+Continue new-system baseline convergence, starting with the unresolved Case Memory contract.
+
+Then define the smallest coherent end-to-end baseline for the next synthetic dry run.
+
+## Do Not Do Next
+
+- do not resume legacy `BUG-001` / `BUG-002` chasing as the main task
+- do not rerun the old legacy synthetic dry run
+- do not rewrite legacy node specs unless migration order is explicitly being handled
+- do not start implementation
+- do not treat historical drafts as active design sources
+
+## Last Meaningful Checkpoint
+
+- `new system/new_system.md` is the only active new-system design source
+- `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts
+- `PLANS.md` now owns the unified phase model
