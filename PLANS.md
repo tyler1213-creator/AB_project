@@ -2,99 +2,110 @@
 
 ## Document Role
 
-`PLANS.md` owns the project phase model and high-level planning questions.
+`PLANS.md` owns the phase-level plan, exit criteria, and planning questions.
 
-It does not own current execution state, handoff detail, accepted design tradeoffs, agent entry rules, stable project charter, or system design content. Those responsibilities belong to:
+It does not own:
 
-- `TASK_STATE.md` — current execution state, active risks, and next step
-- `DECISIONS.md` — important accepted tradeoffs
-- `AGENTS.md` — agent entry rules and current reading order
-- `CLAUDE.md` — stable project charter
-- `new system/new_system.md` — current active system design baseline
+- live handoff status
+- temporary risks
+- next action
+- stable charter
+- accepted decision history
 
 ## Planning Objective
 
 Move the repo from design convergence to implementation readiness without creating source-of-truth ambiguity.
 
-The near-term planning goal is to stabilize the new-system baseline enough that synthetic validation can test the current design instead of reopening legacy routing questions by default.
+The near-term planning target is to converge the new-system baseline enough that the next synthetic dry run validates the current design instead of reopening legacy routing questions by default.
 
-## Non-Goals
+## Current Roadmap Position
 
-- Do not redesign product logic in this planning document.
-- Do not use this file as a handoff log.
-- Do not add low-level field design questions here.
-- Do not add implementation task briefs before contracts are frozen.
-- Do not treat OCR/parser quality or real-world ingestion noise as the next design-validation target.
+The repo is currently in Phase 1: Design Stabilization.
+
+Current planning emphasis:
+
+1. converge the active new-system baseline
+2. identify which legacy constraints must be preserved in that baseline
+3. prepare the next synthetic dry run against the new baseline
+
+`TASK_STATE.md` remains the source of truth for the immediate next step and active risks.
 
 ## Phase Model
 
 ### Phase 1: Design Stabilization
 
-Purpose:  
+Purpose:
 Converge the active design baseline and remove source-of-truth ambiguity.
 
-Exit gate:  
-The current active baseline is coherent enough for synthetic validation.
+Success criteria:
 
-Before this phase exits, the repo should make clear:
-
-- which legacy constraints must be preserved in the new baseline
-- what the synthetic pack remap target is
-- how expected behavior and routing expectations should be rewritten for the new baseline
-- that no unresolved source-of-truth conflict remains among canonical docs
+- the active new-system baseline is coherent enough to validate
+- preserved legacy constraints are identified explicitly rather than imported implicitly
+- canonical governance docs no longer conflict about ownership or status
+- the next synthetic dry-run target is clear
 
 ### Phase 2: Synthetic Baseline Validation
 
-Purpose:  
+Purpose:
 Remap the synthetic pack and expected behavior to the new-system baseline, then run a synthetic dry run to expose design, interface, and state-flow problems.
 
-Exit gate:  
-Synthetic findings are concrete and categorized as design bugs, contract gaps, or deferred issues.
+Success criteria:
+
+- synthetic inputs target the new-system baseline rather than the retired legacy baseline
+- expected behavior and routing expectations are rewritten for that baseline
+- findings are categorized as design bugs, contract gaps, or deferred issues
 
 ### Phase 3: Contract Freeze
 
-Purpose:  
+Purpose:
 Turn validated shared data structures and behavior expectations into implementation-facing contracts.
 
-Exit gate:  
-Core contracts are stable enough that implementation agents can work without inventing fields or behavior.
+Success criteria:
+
+- core contracts are stable enough for implementation work
+- contract authority is explicit and consistent across related specs
 
 ### Phase 4: Implementation Foundation
 
-Purpose:  
+Purpose:
 Implement shared schemas, deterministic tools, storage foundations, and test scaffolding.
 
-Exit gate:  
-Foundation components pass tests and match frozen contracts.
+Success criteria:
+
+- foundation components match frozen contracts
+- implementation scaffolding is sufficient for pipeline work
 
 ### Phase 5: Pipeline Implementation
 
-Purpose:  
+Purpose:
 Implement processing workflow components against the frozen contracts.
 
-Exit gate:  
-Pipeline can run end-to-end on synthetic baseline cases.
+Success criteria:
+
+- the pipeline can run end-to-end on the synthetic baseline
+- node behavior matches the frozen contracts closely enough for integration debugging
 
 ### Phase 6: Integration and Real-World Validation
 
-Purpose:  
-Use real-world data to separate ingestion, OCR, and parser noise from system design issues.
+Purpose:
+Use real-world data to separate ingestion / OCR / parser noise from system-design issues.
 
-Exit gate:  
-Real-world blockers are categorized and the system is ready for product hardening.
+Success criteria:
 
-## Current Roadmap Position
+- real-world blockers are categorized cleanly
+- the system is ready for product hardening
 
-The repo is currently in Phase 1: Design Stabilization, specifically new-system baseline convergence.
+## Non-Goals For This Document
 
-A synthetic dry run has already been executed against the legacy pattern-first baseline. The next meaningful synthetic dry run should target the new-system baseline after the baseline is coherent enough to validate.
-
-`TASK_STATE.md` remains the source of truth for the current objective, current risks, and immediate next step.
+- do not use this file as a running handoff log
+- do not redesign product logic here
+- do not store low-level field debates here
+- do not turn this file into the current task brief
 
 ## Open Planning Questions
 
 - What is the smallest coherent new-system baseline for the next synthetic dry run?
 - Which legacy constraints must be preserved in the new baseline?
 - How should the synthetic pack and expected behavior be remapped to the new baseline?
-- What needs to be contract-frozen before implementation can begin?
-- What rewrite or migration order best prevents source-of-truth conflicts after the new baseline stabilizes?
+- What must be contract-frozen before implementation begins?
+- What migration order best prevents source-of-truth conflicts after baseline convergence?
