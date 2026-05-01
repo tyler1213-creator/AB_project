@@ -96,6 +96,8 @@ Default editable governance / handoff docs:
 
 `CLAUDE.md` is editable only when the stable charter, durable principles, or long-lived constraints actually change.
 
+`new system/new_system.md` is editable only for focused active-baseline convergence tasks. Broad rewrites require explicit user approval. If a proposed edit would change product design contracts or business-spec substance, stop and ask before proceeding.
+
 Default reference-only docs unless the task explicitly requires otherwise:
 
 - `new system/different_node.md`
@@ -113,6 +115,7 @@ Do not silently mix assumptions, terminology, or file paths between the active n
 - Prefer first-principles reasoning over local patching.
 - Do not add components unless they solve a concrete problem.
 - Do not change public data contracts casually.
+- Treat edits to `new system/new_system.md` as narrow baseline-convergence maintenance unless the user explicitly approves broader rewriting.
 - If a change affects upstream/downstream interfaces, update the related governing docs together.
 - For LLM context design, prefer progressive disclosure: keep the stable prompt minimal and load policy or skill packs only when activation predicates fire.
 
