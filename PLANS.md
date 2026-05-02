@@ -25,8 +25,9 @@ The repo is currently in Phase 1: Design Stabilization.
 Current planning emphasis:
 
 1. converge the active new-system baseline
-2. identify which legacy constraints must be preserved in that baseline
-3. prepare the next synthetic dry run against the new baseline
+2. use `new system/mvp_core_brief.md` as the MVP scope and core-loop boundary for baseline convergence
+3. identify which legacy constraints must be preserved in that baseline
+4. prepare the next synthetic dry run against the new baseline
 
 `TASK_STATE.md` remains the source of truth for the immediate next step and active risks.
 
@@ -105,6 +106,7 @@ Success criteria:
 ## Open Planning Questions
 
 - What is the smallest coherent new-system baseline for the next synthetic dry run?
+- Which minimal functional logic is required to satisfy the MVP core loop in `new system/mvp_core_brief.md`?
 - Which legacy constraints must be preserved in the new baseline?
 - How should the synthetic pack and expected behavior be remapped to the new baseline?
 - What must be contract-frozen before implementation begins?

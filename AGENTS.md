@@ -38,6 +38,7 @@ Each document is authoritative only within its owning responsibility:
 Product-spec authority for current design discussion:
 
 - `new system/new_system.md` is the only active new-system design source.
+- `new system/mvp_core_brief.md` owns MVP scope, validation intent, and core-loop boundary. It constrains MVP-path design work but does not define node schemas or implementation contracts.
 - `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts and should not continue to be updated.
 - Legacy node specs are reusable constraints / reference material, not the default baseline.
 
@@ -70,6 +71,8 @@ Read `supporting documents/development_workflow.md` when the task touches:
 Treat `supporting documents/development_workflow.md` as durable workflow method only. If phase labels or current phase status conflict with `PLANS.md`, `PLANS.md` owns the current phase model and exit criteria.
 
 Read `new system/new_system.md` when the task touches the current design target.
+
+Read `new system/mvp_core_brief.md` when the task touches MVP scope, MVP core loop, synthetic dry-run target, or new-system baseline convergence.
 
 Read relevant legacy specs only when:
 

@@ -22,22 +22,24 @@ Current governance baseline:
 
 - Governance docs define clearer boundaries between agent operating rules, live handoff, phase planning, stable charter, workflow method, and communication preferences.
 - This governance cleanup did not change product design contracts or business-spec substance.
+- `new system/mvp_core_brief.md` now defines the MVP scope, validation intent, and core-loop boundary for MVP-path design work.
 
 Implementation has not started.
 
 ## Active Objective
 
-Converge the evidence-first redesign into the repo's next working baseline, then prepare the next synthetic dry run against that new baseline.
+Converge the evidence-first redesign into the repo's next working baseline under the MVP core loop defined in `new system/mvp_core_brief.md`, then prepare the next synthetic dry run against that new baseline.
 
 ## Active Baseline
 
 - `new system/new_system.md` is the only active new-system design source.
+- `new system/mvp_core_brief.md` owns MVP scope, validation intent, and core-loop boundary; it does not own node schemas or implementation contracts.
 - `new system/different_node.md` and `new system/memory_node_design.md` are historical drafts and should not continue to be updated.
 - Legacy node specs are reusable constraints / reference material, not the default baseline.
 
 ## Immediate Next Step
 
-Resolve the remaining Case Memory contract questions as the likely starting point for baseline convergence, then define the smallest coherent end-to-end target for the next synthetic dry run.
+Use `new system/mvp_core_brief.md` to gate the next baseline-convergence discussion: first confirm the minimal functional logic required for the MVP loop, then derive the necessary minimal executable contracts before synthetic dry run or implementation.
 
 ## Active Risks
 
@@ -58,5 +60,6 @@ Resolve the remaining Case Memory contract questions as the likely starting poin
 
 ## Latest Meaningful Checkpoint
 
+- `new system/mvp_core_brief.md` was added as the standalone MVP scope / core-loop / validation-boundary brief.
 - Governance docs now separate operating rules, stable charter, live status, phase planning, workflow method, and communication preferences more explicitly.
 - The next major project step remains: converge the new-system baseline and prepare a new synthetic dry run.
