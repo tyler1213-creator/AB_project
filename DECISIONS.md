@@ -308,3 +308,88 @@ Reason:
 Tradeoff:
 - `new_system.md` becomes longer and must carry both baseline narrative and key contract details
 - `different_node.md` and `memory_node_design.md` remain useful historical context, but they are no longer maintained as active specs
+
+## 2026-05-04
+
+### Reframed new-system design from functional families to workflow nodes/logs
+Decision:
+- Future new-system design work should be organized by workflow nodes and durable logs / memory stores, not functional families.
+
+Reason:
+- Product logic is unchanged, but workflow-node framing makes upstream/downstream order, read/write authority, and node/log boundaries explicit for future agents.
+- Piggy Bai and future windows need a stable way to understand which nodes and logs compose the current system before designing follow-on specs.
+
+Consequence:
+- Existing functional logic remains valid.
+- Related docs should be rewritten for terminology and framing only, not redesigned.
+- Memory layers such as Case Log or Entity Log should be tied to the workflow nodes that read, write, or propose changes to them.
+
+## 2026-05-06
+
+### Accepted shared TransactionBasis contract convergence target
+Decision:
+- Establish a shared Stage 3 contract/glossary for `ObjectiveTransactionBasis` and `TransactionBasis` to unify objective transaction facts across nodes.
+- This is not a new workflow node, not a new Log, not a durable memory store, and not a business rule. It is a shared data contract for the transaction fact basis that downstream nodes reference.
+- Fields suitable for cross-node canonical naming should be unified instead of letting each node invent local equivalents. Node-local aliases are acceptable only when explicitly mapped to canonical fields with producer, consumer, authority, and terminal-state meaning.
+
+Reason:
+- Date, amount, direction, bank/source account, and evidence refs are not mainly semantic business judgments; they are objective transaction facts and binding references.
+- Their lifecycle is a binding/reference chain: raw evidence → parsed objective fact → transaction-bound fact → downstream reference → JE / audit / logging use.
+- If these fields remain locally named (`date_basis` / `date` / `transaction_date`, `amount_absolute_basis` / `amount_abs`, `money_in` / `inflow`, `source_account_basis` / `source_account_ref` / `bank_account`), implementation will need hidden per-node mappings and contract drift will become hard to debug.
+
+Consequence:
+- Future Stage 3 revision should create or update a shared contract artifact for `ObjectiveTransactionBasis` + `TransactionBasis` before broad per-node cleanup.
+- Codex may later perform mechanical field-name alignment only after Tyler/Hermes approve the canonical fields and enum choices.
+- This decision does not start Stage 4, implementation, tests, synthetic remapping, or coding-agent task contracts.
+
+### Accepted global `direction` enum
+Decision:
+- Use `direction` as the canonical field name for normalized transaction direction.
+- Use canonical values: `inflow`, `outflow`, and `unknown`.
+- Treat `money_in` and `money_out` as non-canonical local/legacy aliases that must map to `inflow` and `outflow` during Stage 3 contract cleanup.
+
+Reason:
+- `direction` is an objective transaction-basis field, not a JE debit/credit instruction and not an income/expense classification.
+- `amount_abs` should remain positive; direction must not be double-encoded through signed amount.
+- `inflow/outflow` better expresses customer-side value/money movement across bank, credit-card, and non-cash contexts than `money_in/money_out`.
+
+Consequence:
+- Future shared `TransactionBasis` contract should define `direction = inflow | outflow | unknown`.
+- `direction = unknown` cannot support normal finalization or normal JE generation without review/repair.
+- JE debit/credit logic must still use account type, source account, control account, and accounting outcome; it must not derive JE lines from `direction` alone.
+
+### Accepted controlled case-supported auto-finalization
+Decision:
+- Case-supported results may directly proceed to JE generation and final logging when a controlled finalization authority path is satisfied.
+- The system should not avoid automation merely because errors are possible. Instead, it must preserve traceability, expose review-relevant uncertainty when appropriate, and support human-directed automated correction.
+- A case-supported auto-finalized transaction must retain enough user-approved audit references for review and later diagnosis, but the exact control-envelope object, field names, and review-signal design are not settled.
+
+Reason:
+- The legacy confidence-classifier design already allowed `ai_high_confidence` to call JE construction/validation and write Transaction Log, while PENDING results went to Coordinator.
+- Legacy safeguards included blocking risk packs, soft-risk override evidence, `policy_trace`, `ai_reasoning`, Review Agent correction flows, Intervention Log, observation updates, force_review/non_promotable flags, and rule/observation management.
+- The new case-memory system should preserve the product intent of controlled automation and correction traceability while translating it from pattern/observation terms into entity/case/governance terms.
+
+Consequence:
+- Future Stage 3 work must not assume `finalization_authority_basis`, `review_attention_signal`, or `decision_control_trace` as accepted object/field names or accepted field clusters.
+- The unresolved design question remains the exact auto-finalization / review-surfacing / correction-feedback model, and Tyler wants that model redesigned from first principles after the current question sequence.
+- Codex must not silently define thresholds, mutation rules, field names, or review-signal names without Tyler/Hermes approval.
+
+### Clarified `ai_reasoning` / `policy_trace` boundaries for the new system
+Decision:
+- Legacy `ai_reasoning` is renamed `ai_decision_summary` in the new system. It is a human-readable AI decision summary, not chain-of-thought, not durable authority, and not a future runtime decision source.
+- Legacy `policy_trace` is not accepted as a final new-system field name. Its useful design intent is to retain enough system-decision basis for audit, review, correction, and governance traceability. Every current-system replacement name beyond `ai_decision_summary` remains Tyler-gated.
+- `decision_control_trace` is rejected as an independent object, contract, Log, memory store, or hidden duplicate of the auto-finalization/review-control task.
+- `Transaction Log` owns transaction lifecycle audit: final outcome, workflow path, minimal necessary snapshots, and refs. It is not a root-cause store, learning layer, runtime decision source, or active-memory authority.
+- Intervention / correction records own wrongness, human intervention, correction actions, and root-cause diagnosis. Governance events own durable authority changes such as approval, rejection, downgrade, supersession, or memory/policy mutation.
+- Active memory stores may expose only corrected, approved, or superseded-aware state. Erroneous AI summaries or decision-basis records may remain audit references but must not survive as active runtime authority.
+
+Reason:
+- Old-system field placement was an implementation choice, not new-system authority.
+- The new workflow-node/log framing needs each record type to answer a different first-principles question: what happened to this transaction, why was it wrong, what authority changed, and what future runtime may use.
+- Keeping a separate `decision_control_trace` would duplicate the unresolved auto-finalization/review-signal task and create a patch-style abstraction.
+
+Consequence:
+- Decisions 1–2 are accepted and Decision 3 is accepted at product-intent level with naming/details still Tyler-gated; Decision 4 is next in the 8-item shared-contract review sequence.
+- Future docs may reference old `policy_trace` only as a legacy concept or placeholder, not as an accepted final field name.
+- The separate wrong-result correction loop and auto-finalization/review-surfacing models must be redesigned from first principles after Tyler finishes the 8 core shared contract decisions.
+- This decision does not start Stage 4, implementation, tests, synthetic remapping, Codex revision, or schema cleanup.

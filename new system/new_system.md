@@ -13,6 +13,58 @@
 
 **旧系统先把交易压成 `pattern（标准描述）`，再学习；新系统先认清“这是谁”和“过去类似情况发生过什么”，再决定能不能自动化。**
 
+
+## 1.1 当前系统由哪些 Workflow Nodes 与 Logs 组成
+
+本节只是把现有功能逻辑改写成 `workflow node + log/memory store` 的表达方式，方便后续窗口和 Piggy Bai 对齐设计语境；它不新增产品功能，不冻结 schema，也不改变下面各节已经定义的功能逻辑。
+
+### Workflow Nodes
+
+1. `Onboarding Node`：处理历史材料，建立初始 evidence、profile 候选、entity、case 和 rule 候选。
+2. `Evidence Intake / Preprocessing Node`：整理新交易证据，统一客观结构字段。
+3. `Transaction Identity Node`：分配 `transaction_id`，处理同一交易识别和去重。
+4. `Profile / Structural Match Node`：先处理内部转账、贷款还款等客户结构可确定的交易。
+5. `Entity Resolution Node`：对非结构性交易识别 counterparty / vendor / payee，输出实体识别状态。
+6. `Rule Match Node`：在 entity、alias、role/context 和 automation policy 都允许时，执行确定性 rule match。
+7. `Case Judgment Node`：未命中 rule 或 rule 不适用时，读取 case memory 和当前 evidence 形成建议或 pending reason。
+8. `Coordinator / Pending Node`：证据不足、实体歧义或判断不稳时，向 accountant 获取确认。
+9. `Review Node`：让 accountant 审核、批准或修正系统结果和治理候选。
+10. `JE Generation Node`：把已确认或足够可信的分类结果转换成 journal entry。
+11. `Transaction Logging Node`：把本笔交易最终处理结果和审计轨迹写入 Transaction Log。
+12. `Case Memory Update Node`：把已完成交易沉淀为案例，并提出 entity / alias / role / rule 候选。
+13. `Governance Review Node`：处理高权限长期记忆变化，例如 entity merge/split、alias approval、role confirmation、rule promotion、automation policy change。
+14. `Knowledge Compilation Node`：把 entity、case、rule、governance 历史编译成人和 agent 可读的客户知识摘要。
+15. `Post-Batch Lint Node`：批次结束后检查 entity 拆合、rule 稳定性、case-to-rule 候选和自动化风险。
+
+### Logs / Memory Stores
+
+1. `Evidence Log`：保存原始证据和证据引用，不保存业务结论。
+2. `Entity Log`：保存 counterparty / vendor / payee、aliases、roles、status、authority、automation_policy 和证据链接，不保存 COA / HST / JE 结论。
+3. `Case Log`：保存真实历史案例、最终分类、证据、例外和 accountant correction；它不是旧 Observations 的简单改名。
+4. `Rule Log`：保存 accountant/governance 已批准的 deterministic rules，不保存候选规则或一次性判断。
+5. `Transaction Log`：保存每笔交易最终处理结果和审计轨迹；只写和查询，不参与 runtime decision，也不是学习层。
+6. `Intervention Log`：保存 accountant 介入、提问、回答、修正和确认过程。
+7. `Governance Log`：保存高权限长期记忆变化及其审批状态。
+8. `Knowledge Log / Summary Log`：保存从 entity、case、rule、governance 历史编译出的客户知识摘要；不作为 deterministic rule source。
+9. `Profile`：保存客户结构档案，例如 bank accounts、internal transfer relationships、tax config、loans、employees；它是 durable store，但不强行改名为 `Profile Log`。
+
+后续设计对象如果看起来是 memory layer，而不是 workflow step，应先明确：哪个 workflow node 读取它、哪个 workflow node 写入它、哪些变化只能作为 candidate 提出、哪些必须经过 accountant / governance approval。
+
+### Trace / Reasoning Boundary
+
+旧系统里的 `ai_reasoning` / `policy_trace` 只作为设计思路参考，不作为新系统命名或字段位置的权威。
+
+已确认边界：
+
+- `ai_reasoning` 在新系统中命名为 `ai_decision_summary`。它是面向人类的 AI 决策摘要，不是 chain-of-thought，不是 authority source，也不能被未来 runtime 当作可复用判断依据。
+- `policy_trace` 不是新系统的最终字段名。它原本承载的有用设计意图是：保留足够的系统判断依据，让审计、review、correction 和 governance 能追溯当时系统为什么这样处理；具体拆分方式和字段命名由 Tyler 后续决定。
+- `Transaction Log` 保存 transaction lifecycle audit：最终结果、流程路径、最小必要快照和 refs。它不是 root-cause store、learning layer、runtime decision source，也不保存可被未来自动化直接复用的错误推理。
+- `Intervention Log` / correction record 保存人工介入、错误表现、修正动作和 root-cause 诊断。
+- `Governance Log` / governance event 保存长期权威变化，例如 approval、rejection、downgrade、supersession、rule/entity/profile/case/automation-policy mutation。
+- active memory stores 只能暴露 corrected / approved / superseded-aware state；错误的 AI 摘要或旧判断依据只能作为 audit reference 保留，不能作为 active case、rule、entity、profile 或 knowledge authority。
+- `decision_control_trace` 不作为新系统独立对象、contract、Log 或 memory store 保留；不要把 risk flags、blockers、exception packs、override evidence、finalization gate result、confidence/uncertainty signals 作为这个独立概念继续设计。
+
+
 ---
 
 ## 2. 新系统到底改了什么
